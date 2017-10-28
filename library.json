@@ -1,0 +1,13 @@
+{
+  "name": "OneKey",
+  "keywords": "Key, Pin, Keyboard, Driver",
+  "description": "composable keys",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/neu-rah/...",
+    "branch": "master"
+  },
+  "frameworks": "arduino",
+  "platforms": "*"
+}
