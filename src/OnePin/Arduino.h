@@ -3,18 +3,19 @@
   #define RSITE_ARDUINOPINS_DEF
 
   #include <Arduino.h>
+  typedef int8_t PinNr;
   #include "OnePin.h"
 
-  inline bool arduino_get(int p) {return digitalRead(p);}
-  inline void arduino_modeOff(int p) {pinMode(p,INPUT);digitalWrite(p,LOW);}
-  inline void arduino_modeOut(int p) {pinMode(p,OUTPUT);}
-  inline void arduino_modeIn(int p) {pinMode(p,INPUT);}
-  inline void arduino_modeInUp(int p) {pinMode(p,INPUT_PULLUP);}
-  inline void arduino_modeInDown(int p) {pinMode(p,INPUT);}//
-  inline void arduino_mode(int p, int o) {pinMode(p,o);}
-  inline void arduino_set(int p,bool o) {digitalWrite(p,o);}
-  inline void arduino_on(int p) {digitalWrite(p,HIGH);}
-  inline void arduino_off(int p) {digitalWrite(p,LOW);}
+  inline bool arduino_get(PinNr p) {return digitalRead(p);}
+  inline void arduino_modeOff(PinNr p) {pinMode(p,INPUT);digitalWrite(p,LOW);}
+  inline void arduino_modeOut(PinNr p) {pinMode(p,OUTPUT);}
+  inline void arduino_modeIn(PinNr p) {pinMode(p,INPUT);}
+  inline void arduino_modeInUp(PinNr p) {pinMode(p,INPUT_PULLUP);}
+  inline void arduino_modeInDown(PinNr p) {pinMode(p,INPUT);}//
+  inline void arduino_mode(PinNr p, PinNr o) {pinMode(p,o);}
+  inline void arduino_set(PinNr p,bool o) {digitalWrite(p,o);}
+  inline void arduino_on(PinNr p) {digitalWrite(p,HIGH);}
+  inline void arduino_off(PinNr p) {digitalWrite(p,LOW);}
 
   class ArduinoPin:
     public InputPin<&arduino_get>,

@@ -2,39 +2,15 @@
 #ifndef RSITE_ONEKEY_DEF
   #define RSITE_ONEKEY_DEF
 
-  #include "Pins/Arduino.h"
-
-  //debouncer : pin overlay
-  template<class O,int delta>
-  class Debouncer:public O {
-    public:
-      using O::O;
-      inline bool get(int pin) {
-        return millis()-lastRead<delta?lastState:(lastRead=millis(),lastState=O::get(pin));
-      }
-    protected:
-      unsigned long lastRead;
-      bool lastState;
-  };
-
-  // template<
-  //     int nr,
-  //     bool isOn,
-  //     int pinNr
-  //   >
-  // class Pin {
-  //   virtual void pinMode() {}
-  //   virtual bool read() {}
-  //   virtual void write(bool) {}
-  // };
-  //
   // namespace RU {
 
-    //use negative pin number for reverse logic pin and internal pull-up
+    #include "OnePin/Arduino.h"
+
+    //   use negative pin number for reverse logic pin and internal pull-up
     // template<
     //   int nr,
     //   bool isOn,
-    //   int pinNr,
+    //   PinNr pinNr,
     //   int longPress
     // >
     // class OneKeyBase {
@@ -68,8 +44,8 @@
     //     State state=Open;
     // };
     //
-    // template<int nr,int longPress=500>
-    // using OneKey=OneKeyBase<nr,nr<0,nr<0?-nr:nr,longPress>;
+    // template<int nr>
+    // using OneKey=OneKeyBase<nr,nr<0,nr<0?-nr:nr>;
   // };//namespace RU
 
 #endif
