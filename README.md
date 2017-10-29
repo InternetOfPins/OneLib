@@ -133,6 +133,4 @@ this can import code written on other frameworks to be compiled with OneLib inst
 390:	0e 94 96 00 	call	0x12c	; 0x12c <delay.constprop.2>
 394:	20 97       	sbiw	r28, 0x00	; 0
 396:	a1 f3       	breq	.-24     	; 0x380 <main+0xc0>
-398:	0e 94 00 00 	call	0	; 0x0 <__vectors>
-39c:	f1 cf       	rjmp	.-30     	; 0x380 <main+0xc0>
 ```
