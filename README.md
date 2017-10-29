@@ -1,6 +1,6 @@
 # OneLib
 
-Zero-cost abstractions for pin frameworks
+Aiming Zero-cost abstractions for pin frameworks
 
 ## Purpose
 Experiment with C++ (0x11) to abstract over pin based frameworks (_**ie**: Wiring, Arduino_).
