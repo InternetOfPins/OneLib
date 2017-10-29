@@ -51,6 +51,12 @@ This is also a zero cost abstraction, meaning that the composition is code equiv
 
 **advantages:** software debounce can be added outside a library
 
+ex: **reverse logic**
+
+IOPin check for negative pin number and overlays a reverse logic.
+
+Apply to inputs with pull-up, also removing this consideration from the libraries.
+
 ## Current state
 
 ### API
@@ -101,6 +107,7 @@ OnePin<ArduinoPin,13> led;
 provide a layer of translation from other frameworks (ie: wiring)
 this can import code written on other frameworks to be compiled with OneLib instead
 
+## Disassembly compare
 
 #### blinking with OnePin
 ```assembly
