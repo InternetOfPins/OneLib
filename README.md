@@ -111,7 +111,8 @@ this can import code written on other frameworks to be compiled with OneLib inst
 
 ## Benchmarks
 
-comparative number of operations in 2 sec.
+Comparative number of operations in 2 sec. (higher is better).
+Using Arduino framework as raw and OnePin overlay.
 
 | Mode            |  \# Ops |
 |-----------------|---------|
