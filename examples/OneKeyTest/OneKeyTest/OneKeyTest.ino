@@ -15,6 +15,7 @@ void setup() {
   btn.begin();
 }
 void loop() {
-  Serial.println(btn.get());
+  // Serial.println(btn.get());
+  // Serial.println(btn.t());
   delay(200);
 }
