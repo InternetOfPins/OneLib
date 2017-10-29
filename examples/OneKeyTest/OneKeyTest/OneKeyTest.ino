@@ -3,15 +3,15 @@
 //negative pin, OnePin will wire reverse logic
 #define ENCBTN_PIN -4
 
-const OnePin<ArduinoPin,13> led;
+ArduinoPin Pin;
 
 void setup() {
-  led.modeOut();
+  Pin.modeOut(13);
 }
 
 void loop() {
-  led.on();
+  Pin.on(13);
   delay(1000);
-  led.off();
+  Pin.off(13);
   delay(1000);
 }

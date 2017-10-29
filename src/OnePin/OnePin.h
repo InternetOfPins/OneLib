@@ -90,7 +90,7 @@
   template<class O,PinNr nr>
   using Base=LogicPinBase< O, nr<0 >;
 
-  template<class O,PinNr nr,PinNr pin>
+  template<class O,PinNr nr,const PinNr pin>
   class PinBase:protected Base<O,nr> {
   public:
     inline bool get() {return Base<O,nr>::get(pin);}

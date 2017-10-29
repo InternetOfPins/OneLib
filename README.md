@@ -104,8 +104,23 @@ OnePin<ArduinoPin,13> led;
 
 ## TODO
 
+Add costly virtual pins so that this behavior can be delivered to libraries.
+
 provide a layer of translation from other frameworks (ie: wiring)
 this can import code written on other frameworks to be compiled with OneLib instead
+
+## Benchmarks
+
+comparative number of operations in 2 sec.
+
+| Mode            |  \# Ops |
+|-----------------|---------|
+|_Raw mode_|264974 |
+|OnePin mode|264968
+|_Raw input_|308706|
+|OnePin input|308856|
+|Debounced input|349337|
+
 
 ## Disassembly compare
 
