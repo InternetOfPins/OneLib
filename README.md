@@ -24,8 +24,6 @@ OnePin<PinOutput,ArduinoPin,LED_BUILTIN> led;
 OnePin<PinInputUp,Debouncer<ArduinoPin,30>, ENCBTN_PIN> btn;
 
 void setup() {
-  Serial.begin(115200);
-  while(!Serial);
   led.begin();
   btn.begin();
 }
