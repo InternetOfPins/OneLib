@@ -5,6 +5,11 @@
   //r-Site pins API
   //Rui Azevedo - Oct.2017
   //ruihfazevedo@gmail.com
+  //CC-BY-NC-SA
+
+  #ifdef DEBUG
+  #include <streamFlow.h>
+  #endif
 
   ///////////////////////////////////////////////////////////////
   // base pin functions adapter
@@ -84,27 +89,46 @@
       inline void off(PinNr pin) {O::set(pin,false);}
   };
 
+  template<class O,PinNr nr>
+  using LogicPin=LogicPinBase< O, nr<0 >;
+
   ////////////////////////////////////////////////////////////////////
   // Pin API with specific pin number
 
-  template<class O,PinNr nr>
-  using Base=LogicPinBase< O, nr<0 >;
-
-  template<class O,PinNr nr,const PinNr pin>
-  class PinBase:protected Base<O,nr> {
-  public:
-    inline bool get() {return Base<O,nr>::get(pin);}
-    inline void set(bool o) {Base<O,nr>::set(pin,o);}
-    inline void on() {Base<O,nr>::on(pin);}
-    inline void off() {Base<O,nr>::off(pin);}
-    inline void mode(uint8_t m) {Base<O,nr>::mode(pin,m);}
-    inline void modeOff() {Base<O,nr>::modeOff(pin);}
-    inline void modeOut() {Base<O,nr>::modeOut(pin);}
-    inline void modeIn() {Base<O,nr>::modeIn(pin);}
-    inline void modeInUp() {Base<O,nr>::modeInUp(pin);}
+  template<class O,PinNr pin>
+  class PinIO:protected O {
+    private: OnePinIO(){}
+    public:
+      // inline void TaskPin() {}//restriction
+      inline bool in() {return O::get(pin);}
+  };
+  template<class O,PinNr pin>
+  class PinOutput:public PinIO<O,pin> {
+    public:
+      inline void begin() {O::modeOut(pin);}
+      inline void begin(bool o) {O::modeOut(pin);O::set(pin,o);}
+      inline void set(bool o) {O::set(pin,o);}
+      inline void on() {O::on(pin);}
+      inline void off() {O::off(pin);}
+  };
+  template<class O,PinNr pin>
+  class PinInput:public PinIO<O,pin> {
+    public:
+      inline void begin() {O::modeIn(pin);}
+  };
+  template<class O,PinNr pin>
+  class PinInputUp:public PinIO<LogicPin<O,-pin>,pin> {
+    public:
+      inline void begin() {O::modeInUp(pin);}
   };
 
-  template<class O,PinNr nr>
-  using OnePin=PinBase<O,nr,nr<0?-nr:nr>;
+  template<template<class,PinNr> class IO,class O,PinNr nr>
+  using OnePinBase=IO<O,nr<0?-nr:nr>;
+
+  template<template<class,PinNr> class IO,class O,PinNr nr>
+  class OnePin:public OnePinBase<IO,O,nr> {
+    // inline OnePin() {IO::TaskPin();}
+  public:
+  };
 
 #endif

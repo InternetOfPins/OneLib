@@ -2,6 +2,8 @@
 
 Aiming Zero-cost abstractions for pin frameworks
 
+CC-BY-NC-SA
+
 ## Purpose
 Experiment with C++ (0x11) to abstract over pin based frameworks (_**ie**: Wiring, Arduino_).
 
@@ -13,31 +15,31 @@ Open this experiment to consideration and improvement.
 
 ```c++
 //use Arduino framework pin function mappings
-#include "OnePin/Arduino.h"
+#include <OnePin/Arduino.h>
 
 //negative pin, OnePin will wire reverse logic
 #define ENCBTN_PIN -4
 
-//pin types
-//attach software debouncer to a pin
-typedef Debouncer<ArduinoPin,30> SoftDebouncedPin;
-
-//specific pins
-OnePin<SoftDebouncedPin,ENCBTN_PIN> pin4;
-OnePin<ArduinoPin,13> led;
+OnePin<PinOutput,ArduinoPin,LED_BUILTIN> led;
+OnePin<PinInputUp,Debouncer<ArduinoPin,30>, ENCBTN_PIN> btn;
 
 void setup() {
-  pin4.modeInUp();
-  led.modeOut();
+  Serial.begin(115200);
+  while(!Serial);
+  led.begin();
+  btn.begin();
 }
 
 void loop() {
-  if (pin4.get()) {
+  if (btn.in()) {
     led.on();
     delay(10);
+    led.off();
+    delay(90);
+  } else {
+    led.set(!led.in());
+    delay(100);
   }
-  led.off();
-  delay(90);
 }
 ```
 
