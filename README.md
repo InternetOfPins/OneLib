@@ -66,23 +66,23 @@ Apply to inputs with pull-up, also removing this consideration from the librarie
 **InputPin**
 
 ```c++
-bool get(PinNr p) // get pin state
+bool get(PinNr p); // get pin state
 ```
 
 **OutputPin**
 
 ```c++
-void set(PinNr p,bool o) // set pin state
-void on(PinNr p) // turn pin on
-void off(PinNr p) // turn pin off
+void set(PinNr p,bool o); // set pin state
+void on(PinNr p); // turn pin on
+void off(PinNr p); // turn pin off
 ```
 
 **IOPinNoDown**
 ```c++
-inline void modeOff(PinNr p) // tristate the pin
-inline void modeOut(PinNr p) // set output pin
-inline void modeIn(PinNr p) // set input pin
-inline void modeInUp(PinNr p) // set input pin with pull-up
+inline void modeOff(PinNr p); // tristate the pin
+inline void modeOut(PinNr p); // set output pin
+inline void modeIn(PinNr p); // set input pin
+inline void modeInUp(PinNr p); // set input pin with pull-up
 ```
 
 **IOPin**

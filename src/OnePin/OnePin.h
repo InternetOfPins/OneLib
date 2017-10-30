@@ -15,7 +15,7 @@
   // base pin functions adapter
   template<bool (*_get)(PinNr)> struct InputPin {
   public:
-    inline bool get(PinNr p) {return (*_get)(p);}
+    static inline bool get(PinNr p) {return (*_get)(p);}
   };
 
   template<
@@ -24,9 +24,9 @@
     void (*_off)(PinNr p)
   > class OutputPin {
   public:
-    inline void set(PinNr p,bool o) {(*_set)(p,o);}
-    inline void on(PinNr p) {(*_on)(p);}
-    inline void off(PinNr p) {(*_off)(p);}
+    static inline void set(PinNr p,bool o) {(*_set)(p,o);}
+    static inline void on(PinNr p) {(*_on)(p);}
+    static inline void off(PinNr p) {(*_off)(p);}
   };
 
   template<
@@ -36,10 +36,10 @@
     void (*_modeInUp)(PinNr)
   > class IOPinNoDown {
   public:
-    inline void modeOff(PinNr p) {(*_modeOff)(p);}
-    inline void modeOut(PinNr p) {(*_modeOut)(p);}
-    inline void modeIn(PinNr p) {(*_modeIn)(p);}
-    inline void modeInUp(PinNr p) {(*_modeInUp)(p);}
+    static inline void modeOff(PinNr p) {(*_modeOff)(p);}
+    static inline void modeOut(PinNr p) {(*_modeOut)(p);}
+    static inline void modeIn(PinNr p) {(*_modeIn)(p);}
+    static inline void modeInUp(PinNr p) {(*_modeInUp)(p);}
   };
 
   template<
@@ -58,7 +58,7 @@
     public IOPinNoDown<_modeOff,_modeOut,_modeIn,_modeInUp>
   {
     public:
-      inline void modeInDown(PinNr p) {(*_modeInDown)(p);}
+      static inline void modeInDown(PinNr p) {(*_modeInDown)(p);}
   };
 
   ///////////////////////////////////////////////////////////////////////
@@ -69,12 +69,14 @@
   template<class O,int delta>
   class Debouncer:public O {
     public:
-      using O::O;
+      // using O::O;
       inline bool get(PinNr pin) {
-        return millis()-lastRead<delta?lastState:(lastRead=millis(),lastState=O::get(pin));
+        if (millis()-lastChange<delta) return lastState;
+        bool s=O::get(pin);
+        return s==lastState?lastState:(lastChange=millis(),lastState=s);
       }
     protected:
-      unsigned long lastRead;
+      unsigned long lastChange=-delta;
       bool lastState;
   };
 

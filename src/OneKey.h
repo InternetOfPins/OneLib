@@ -2,11 +2,9 @@
 #ifndef RSITE_ONEKEY_DEF
   #define RSITE_ONEKEY_DEF
 
-
-  #include "OnePin/Arduino.h"
-
-  template<class O,int longPress>
-  class OneKeyBase {
+  //key driver providing messages
+  template<class O,int dblClk,int longPress>
+  class OneKeyBase:public O {
     public:
       // int t() {return params<500>.lp();}
       enum State : unsigned char {
@@ -18,15 +16,14 @@
         Clicked,
         DoubleClicked
       };
-      inline void begin() {
-        O::modeIn();
-        Serial.print("");Serial.println();
-      }
-      State get() {
-        if (O::get()) {
+      inline void begin() {O::begin();}
+      State read() {
+        if (O::in()) {
           switch(state) {
+            case DoubleClicked:
             case Pressed: return Held;
-            case Open: state=Pressed;
+            case Open:
+              state=millis()-lastChk<dblClk?DoubleClicked:Pressed;
           }
         } else state=Open;
         return state;
@@ -36,7 +33,7 @@
       State state=Open;
   };
 
-  template<class O,int longPress=300>
-  using OneKey=OneKeyBase<O,longPress>;
+  template<class O,int dblClick=100,int longPress=300>
+  using OneKey=OneKeyBase<O,dblClick,longPress>;
 
 #endif
