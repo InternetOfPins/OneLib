@@ -13,9 +13,10 @@
 
   ///////////////////////////////////////////////////////////////
   // base pin functions adapter
-  template<bool (*_get)(PinNr)> struct InputPin {
-  public:
-    static inline bool get(PinNr p) {return (*_get)(p);}
+  template<bool (*_get)(PinNr)>
+  struct InputPin {
+    public:
+      static inline bool get(PinNr p) {return (*_get)(p);}
   };
 
   template<
@@ -69,7 +70,6 @@
   template<class O,int delta>
   class Debouncer:public O {
     public:
-      // using O::O;
       inline bool get(PinNr pin) {
         if (millis()-lastChange<delta) return lastState;
         bool s=O::get(pin);
