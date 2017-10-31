@@ -8,6 +8,7 @@
   typedef PortData* PortReg;
   #include "OnePin.h"
   #include "OnePort.h"
+  // #include "AVR.h"
 
   inline bool arduino_get(PinNr p) {return digitalRead(p);}
   inline void arduino_modeOff(PinNr p) {pinMode(p,INPUT);digitalWrite(p,LOW);}
@@ -25,10 +26,5 @@
     public OutputPin<&arduino_set,&arduino_on,&arduino_off>,
     public IOPinNoDown<&arduino_modeOff,&arduino_modeOut,&arduino_modeIn,&arduino_modeInUp>
   {};
-
-  inline PortData avrPort_get(PortReg reg) {return *(reg);}
-  inline void avrPort_set(PortReg reg,PortData o) {*(reg)=o;}
-  inline void avrPort_mode(PortReg reg,PortData o) {*(reg)=o;}
-  class ArduinoPort:public IOPort<&avrPort_get,&avrPort_set,&avrPort_mode> {};
 
 #endif
