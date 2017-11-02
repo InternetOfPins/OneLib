@@ -7,8 +7,6 @@ CC-BY-NC-SA
 ## Purpose
 Experiment with C++ (0x11) to abstract over pin based frameworks (_**ie**: Wiring, Arduino_).
 
-Using meta-programming to provide function mappings, resulting in direct calls.
-
 Open this experiment to consideration and improvement.
 
 ## Example
@@ -45,22 +43,6 @@ void loop() {
 }
 ```
 
-
-## Composability
-Experiment with abstractions to provide composable pin behavior
-
-**ex: adding software debounce to a pin**
-
-This is also a zero cost abstraction, meaning that the composition is code equivalent to doing that software debounce on the client function.
-
-**advantages:** software debounce can be added outside a library
-
-ex: **reverse logic**
-
-IOPin check for negative pin number and overlays a reverse logic.
-
-Apply to inputs with pull-up, also removing this consideration from the libraries.
-
 ## Generated code
 
 **Arduino BtnBlink**
@@ -74,6 +56,28 @@ Data:          9 bytes (0.4% Full)
 Program:     702 bytes (2.1% Full)
 
 Data:          9 bytes (0.4% Full)
+
+## Composability
+Experiment with abstractions to provide composable pin behavior
+
+**ex: adding software debounce to a pin**
+
+This is also a zero cost abstraction, meaning that the composition is code equivalent to doing that software debounce on the client function.
+
+**advantages:** software debounce can be added outside a library
+
+ex: **reverse logic**
+
+Check for negative pin number and overlays a reverse logic.
+
+This behavior can also be composed into a pin.
+
+### Examples
+
+```c++
+typedef Debouncer<Avr::Pin<AtMega328p::portB,5>,30> Deb13;//soft debounced AVR pin
+typedef Debouncer<Arduino::Pin<13>> Pin13;//soft debounced Arduino pin
+```
 
 ## Benchmarks
 
