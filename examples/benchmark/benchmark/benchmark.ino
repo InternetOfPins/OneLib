@@ -26,12 +26,12 @@ unsigned long test(auto f) {
 
 void test() {
   Serial.print("Arduino pin mode:");
-  Serial.println(test([](){pinMode(4,INPUT);}));
+  Serial.println(test([](){pinMode(13,INPUT);}));
   Serial.print("OneLib pin mode:");
   Serial.println(test([](){Led::modeIn();}));
 
   Serial.print("Arduino pin input:");
-  Serial.println(test([](){digitalRead(4);}));
+  Serial.println(test([](){digitalRead(13);}));
   Serial.print("OnePin pin input:");
   Serial.println(test([](){Led::in();}));
   // Serial.print("Debounced input:");

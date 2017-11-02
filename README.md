@@ -14,7 +14,7 @@ Open this experiment to consideration and improvement.
 ## Example
 
 ```c++
-#include <OneLib/OneLib.h>
+#include <OneLib.h>
 
 //consuming the object with a function
 template<class Pin>
