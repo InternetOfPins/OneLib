@@ -1,18 +1,16 @@
-#include <OneLib.h>
+#include <OneAVR.h>
+#include <OneArduino.h>
+
+using namespace OneLib;
 
 #define ENCBTN_PIN -4
-
-//static hardware description
-struct AtMega328p {
-  typedef Avr::Port<0x23> portB;
-  typedef Avr::Port<0x26> portC;
-  typedef Avr::Port<0x29> portD;
-} mcu;
 
 typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
 Led led;
 typedef Debouncer<Avr::Pin<AtMega328p::portB,5>,30> Deb13;//pin 13 on arduino
 Deb13 deb13;
+typedef Arduino::Pin<13> Pin13;
+Pin13 pin13;
 
 unsigned long cnt;
 unsigned long start;
@@ -31,12 +29,18 @@ void test() {
   Serial.print("|Arduino pin mode:|");
   Serial.print(test([](){pinMode(13,INPUT);}));
   Serial.println("|");
+  Serial.print("|OneLib Arduino pin mode:|");
+  Serial.print(test([](){Pin13::modeIn();}));
+  Serial.println("|");
   Serial.print("|OneLib pin mode:|");
   Serial.print(test([](){Led::modeIn();}));
   Serial.println("|");
 
   Serial.print("|Arduino pin input:|");
   Serial.print(test([](){digitalRead(13);}));
+  Serial.println("|");
+  Serial.print("|OneLib Arduino pin input:|");
+  Serial.print(test([](){pin13.in();}));
   Serial.println("|");
   Serial.print("|OnePin pin input:|");
   Serial.print(test([](){led.in();}));

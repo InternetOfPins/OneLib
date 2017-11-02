@@ -82,11 +82,13 @@ Using Arduino framework and OnePin targeting raw AVR mcu.
 
 | Mode            |  \# Ops |
 |-----------------|---------|
-|Arduino pin mode:|294598|
+|Arduino pin mode:|274281|
+|OneLib Arduino pin mode:|274074|
 |OneLib pin mode:|496787|
-|Arduino pin input:|345587|
-|OnePin pin input:|567752|
-|Debounced input:|341876|
+|Arduino pin input:|324428|
+|OneLib Arduino pin input:|324412|
+|OnePin pin input:|588780|
+|Debounced input:|341875|
 
 ## Disassembly compare
 
