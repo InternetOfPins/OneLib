@@ -14,7 +14,7 @@ Open this experiment to consideration and improvement.
 ## Example
 
 ```c++
-#include <OneLib.h>
+using namespace OneLib;
 
 //consuming the object with a function
 template<class Pin>
@@ -25,15 +25,8 @@ inline void blink(int t) {
 }
 
 //static hardware description
-struct AtMega328p {
-  typedef Avr::Port<0x23> portB;
-  typedef Avr::Port<0x26> portC;
-  typedef Avr::Port<0x29> portD;
-} mcu;
-
 typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
 typedef Avr::Pin<AtMega328p::portD,-4> EncBtn;//with reverse logic included
-
 EncBtn encBtn;//and object of type EncBtn (can use operators)
 
 void setup() {
@@ -67,6 +60,20 @@ ex: **reverse logic**
 IOPin check for negative pin number and overlays a reverse logic.
 
 Apply to inputs with pull-up, also removing this consideration from the libraries.
+
+## Generated code
+
+**Arduino BtnBlink**
+
+Program:    1154 bytes (3.5% Full)
+
+Data:          9 bytes (0.4% Full)
+
+**OneLib BtnBlink**
+
+Program:     702 bytes (2.1% Full)
+
+Data:          9 bytes (0.4% Full)
 
 ## Benchmarks
 
