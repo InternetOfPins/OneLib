@@ -10,6 +10,9 @@ struct AtMega328p {
 } mcu;
 
 typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
+Led led;
+typedef Debouncer<Avr::Pin<AtMega328p::portB,5>,30> Deb13;//pin 13 on arduino
+Deb13 deb13;
 
 unsigned long cnt;
 unsigned long start;
@@ -25,17 +28,22 @@ unsigned long test(auto f) {
 }
 
 void test() {
-  Serial.print("Arduino pin mode:");
-  Serial.println(test([](){pinMode(13,INPUT);}));
-  Serial.print("OneLib pin mode:");
-  Serial.println(test([](){Led::modeIn();}));
+  Serial.print("|Arduino pin mode:|");
+  Serial.print(test([](){pinMode(13,INPUT);}));
+  Serial.println("|");
+  Serial.print("|OneLib pin mode:|");
+  Serial.print(test([](){Led::modeIn();}));
+  Serial.println("|");
 
-  Serial.print("Arduino pin input:");
-  Serial.println(test([](){digitalRead(13);}));
-  Serial.print("OnePin pin input:");
-  Serial.println(test([](){Led::in();}));
-  // Serial.print("Debounced input:");
-  // Serial.println(test([](){pin4.get();}));
+  Serial.print("|Arduino pin input:|");
+  Serial.print(test([](){digitalRead(13);}));
+  Serial.println("|");
+  Serial.print("|OnePin pin input:|");
+  Serial.print(test([](){led.in();}));
+  Serial.println("|");
+  Serial.print("|Debounced input:|");
+  Serial.print(test([](){deb13.in();}));
+  Serial.println("|");
 }
 
 void setup() {

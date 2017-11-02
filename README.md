@@ -71,14 +71,15 @@ Apply to inputs with pull-up, also removing this consideration from the librarie
 ## Benchmarks
 
 Comparative number of operations in 2 sec. (higher is better).
-Using Arduino framework as raw and OnePin overlay.
+Using Arduino framework and OnePin targeting raw AVR mcu.
 
 | Mode            |  \# Ops |
 |-----------------|---------|
-|Arduino pin mode|294602|
-|OneLib pin mode|496801|
-|Arduino pin input|345595|
-|OnePin pin input|567768|
+|Arduino pin mode:|294598|
+|OneLib pin mode:|496787|
+|Arduino pin input:|345587|
+|OnePin pin input:|567752|
+|Debounced input:|341876|
 
 ## Disassembly compare
 

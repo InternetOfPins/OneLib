@@ -1,6 +1,10 @@
 /* -*- C++ -*- */
 #include <avr/io.h>
 
+#ifdef DEBUG
+  #include <streamFlow.h>
+#endif
+
 template<class T>
 struct Mem {
   static inline T get(T* addr) {return *addr;}
@@ -21,11 +25,28 @@ struct VoidPin {
 template<class O,bool isOn>
 class LogicPinBase:public O {
   public:
-    static inline bool in() {return O::in()^isOn;}
+    inline bool in() {return this->O::in()^isOn;}
     static inline void on() {isOn?O::off():O::on();}
     static inline void off() {isOn?O::on():O::off();}
-    inline operator bool() {return in();}
+    inline operator bool() {return this->in();}
 };
+
+template<class O,unsigned long delta>
+class Debouncer:public O {
+public:
+  inline bool in() {
+    if (millis()-lastOn<delta) return true;
+    else if (this->O::in()) {
+      lastOn=millis();
+      return true;
+    }
+    return false;
+  }
+  inline operator bool() {return in();}
+protected:
+  unsigned long lastOn=-delta;
+};
+
 
 //-------------------------------------------------------
 struct Avr {
