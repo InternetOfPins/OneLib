@@ -1,13 +1,24 @@
 # OneLib
 
-Aiming Zero-cost abstractions for pin frameworks
+**Zero cost meta-framework for IOT**
 
-CC-BY-NC-SA
+Zero-cost abstractions for pin frameworks
+
+Licence: CC-BY-NC-SA
 
 ## Purpose
 Experiment with C++ (0x11) to abstract over pin based frameworks (_**ie**: Wiring, Arduino_).
 
 Open this experiment to consideration and improvement.
+
+## Technique
+
+This meta-framework can overlay existing frameworks or bare-metal MCU's.
+Working with the C++ compiler at type level.
+
+**Zero-cost** meta-programming with static inline functions.
+
+**Composability** is provided by reversing the inheritance chain, letting the final user specify the concrete object or composition.
 
 ## Example
 
