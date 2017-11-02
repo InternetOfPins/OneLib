@@ -90,7 +90,7 @@ Using Arduino framework and OnePin targeting raw AVR mcu.
 
 ## Disassembly compare
 
-comparing part of the main function from the example above.
+comparing part of the main function from the example above with the equivalent arduino code.
 
 Target: AtMega328P (current is not a fair compare because OneLib is targeting the raw AVR)
 
