@@ -15,6 +15,6 @@ void setup() {
 }
 
 void loop() {
-  Led1::set(tog<10,990>());
+  Led1::set(tog<10,90>());
   Led2::set(tog<500,500>());
 }
