@@ -77,10 +77,24 @@
       // using APin = Pin<0x20+digitalPinToPort(pin),digitalPinToBitMask(pin)>
     };
 
-    struct AtMega328p {
-      typedef Avr::Port<0x23> portB;
-      typedef Avr::Port<0x26> portC;
-      typedef Avr::Port<0x29> portD;
+    namespace AtMega328p {
+      typedef Avr::Port<0x23> PortB;
+      typedef Avr::Port<0x26> PortC;
+      typedef Avr::Port<0x29> PortD;
+      namespace ArduinoPins {
+        constexpr uint8_t pinToPort[]={
+          0x29,0x29,0x29,0x29,0x29,0x29,0x29,0x29,
+          0x23,0x23,0x23,0x23,0x23,0x23,
+          0x26,0x26,0x26,0x26,0x26,0x26
+        };
+        constexpr uint8_t pinToBit[]={
+          0,1,2,3,4,5,6,7,
+          0,1,2,3,4,5,
+          0,1,2,3,4,5
+        };
+        template<int8_t pin>
+        using Pin = Avr::Pin<Avr::Port<pinToPort[pin<0?-pin:pin]>,pin<0?-pinToBit[pin<0?-pin:pin]:pinToBit[pin<0?-pin:pin]>;
+      }
     };
 
   }//namespace OneLib
