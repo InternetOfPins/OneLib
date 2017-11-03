@@ -10,8 +10,6 @@ typedef Avr::Pin<AtMega328p::portB,5> Led1;//pin 13 on arduino
 typedef Avr::Pin<AtMega328p::portC,3> Led2;//pin A3 on arduino
 
 void setup() {
-  Serial.begin(115200);
-  while(!Serial);
   Led1::modeOut();
   Led2::modeOut();
 }
