@@ -5,7 +5,7 @@
 #include "OneLib.h"
 
   namespace OneLib {
-    struct Arduino {
+    namespace Arduino {
       template<int pin>
       struct PinBase {
         static inline void mode(uint8_t m) {pinMode(pin,m);}
@@ -15,6 +15,9 @@
         static inline void on() {digitalWrite(pin,HIGH);}
         static inline void off() {digitalWrite(pin,LOW);}
         static inline bool in() {return digitalRead(pin);}
+        template<bool T>
+        static inline void set() {T?on():off();}
+        static inline void set(bool v) {v?on():off();}
       };
       template<int pin>
       using Pin=LogicPinBase<PinBase<pin<0?-pin:pin>,pin<0>;
