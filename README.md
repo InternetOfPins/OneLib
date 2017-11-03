@@ -68,6 +68,34 @@ Program:     702 bytes (2.1% Full)
 
 Data:          9 bytes (0.4% Full)
 
+## Example
+
+**Multi-Blink without delay**
+```c++
+#include <OneAVR.h>
+
+using namespace OneLib;
+
+template<unsigned int on,unsigned int off>
+inline bool tog() {return (millis()%(on+off))<on;}
+
+//static hardware description
+typedef Avr::Pin<AtMega328p::portB,5> Led1;//pin 13 on arduino
+typedef Avr::Pin<AtMega328p::portC,3> Led2;//pin A3 on arduino
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  Led1::modeOut();
+  Led2::modeOut();
+}
+
+void loop() {
+  Led1::set(tog<10,990>());
+  Led2::set(tog<500,500>());
+}
+```
+
 ## Composability
 Experiment with abstractions to provide composable pin behavior
 

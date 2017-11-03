@@ -17,7 +17,7 @@ inline void blink(int t) {
 //static hardware description
 typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
 typedef Avr::Pin<AtMega328p::portD,-4> EncBtn;//with reverse logic included
-EncBtn encBtn;//and object of type EncBtn (can use operators)
+// EncBtn encBtn;//and object of type EncBtn (can use operators)
 
 void setup() {
   Led::modeOut();
@@ -25,7 +25,7 @@ void setup() {
 }
 
 void loop() {
-  if (encBtn) {//converts to bool => reads the pin!
+  if (EncBtn()) {//converts to bool => reads the pin!
     blink<Led>(10);
     delay(90);
   } else {

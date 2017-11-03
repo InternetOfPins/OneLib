@@ -65,10 +65,16 @@
         static inline void modeInUp() {Port::template modeInUp<pin>();}
         static inline void on() {Port::template on<pin>();}
         static inline void off() {Port::template off<pin>();}
+        template<bool T>
+        static inline void set() {T?on():off();}
+        static inline void set(bool v) {v?on():off();}
         static inline bool in() {return Port::template in<pin>();}
       };
       template<class Port,int pin>
       using Pin=LogicPinBase<PinBase<Port,pin<0?-pin:pin>,pin<0>;
+
+      // template<int pin>
+      // using APin = Pin<0x20+digitalPinToPort(pin),digitalPinToBitMask(pin)>
     };
 
     struct AtMega328p {
