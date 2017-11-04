@@ -23,34 +23,28 @@ Working with the C++ compiler at type level.
 ## Example
 
 ```c++
-using namespace OneLib;
+#include <OneAVR.h>
 
-//consuming the object with a function
-template<class Pin>
-inline void blink(int t) {
-  Pin::on();
-  delay(t);
-  Pin::off();
-}
+using namespace OneLib;
+using namespace OneLib::Avr;
+using namespace OneLib::Avr::AtMega328p;
 
 //static hardware description
-typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
-typedef Avr::Pin<AtMega328p::portD,-4> EncBtn;//with reverse logic included
-EncBtn encBtn;//and object of type EncBtn (can use operators)
+typedef Pin<PortB,5> Led;//pin 13 on arduino
+typedef Pin<PortD,-4> EncBtn;//with reverse logic included
 
 void setup() {
   Led::modeOut();
   EncBtn::modeInUp();
 }
 
+//toggles on/off as specified in ms
+inline bool tog(unsigned int on,unsigned int off) {return (millis()%(on+off))<on;}
+
+//blink with no delay
 void loop() {
-  if (encBtn) {//converts to bool => reads the pin!
-    blink<Led>(10);
-    delay(90);
-  } else {
-    blink<Led>(100);
-    delay(100);
-  }
+  if (EncBtn()) Led::set(tog(10,90));
+  else Led::set(tog(100,100));
 }
 ```
 
@@ -113,25 +107,47 @@ This behavior can also be composed into a pin.
 ### Examples
 
 ```c++
-typedef Debouncer<Avr::Pin<AtMega328p::portB,5>,30> Deb13;//soft debounced AVR pin
-typedef Debouncer<Arduino::Pin<13>> Pin13;//soft debounced Arduino pin
+//soft debounced AVR pin
+typedef RecState<Debouncer<LastState<Avr::Pin<PortB,5>>,30>> Deb13;
+//soft debounced Arduino pin
+typedef RecState<Debouncer<LastState<Arduino::Pin<13>>>> Pin13;
 ```
 
 ## Benchmarks
 
-Comparative number of operations in 2 sec. (higher is better).
-Using Arduino framework and OnePin targeting raw AVR mcu.
+Comparative number of operations in same period of time. (higher is better).
 
-| Mode            |  \# Ops |
-|-----------------|---------|
-|Arduino pin mode:|274281|
-|OneLib Arduino pin mode:|274074|
-|OneLib pin mode:|496787|
-|Arduino pin input:|324428|
-|OneLib Arduino pin input:|324412|
-|OnePin pin input:|588780|
-|Debounced input:|341875|
+Test using:
+* Arduino framework
+* OneLib over Arduino framework.
+* OneLib targeting raw AVR mcu.
 
+### pinMode
+
+| Framework       |  \# Ops | Debounced |
+|-----------------|---------|-----------|
+|Arduino pin mode:              |25632  ||
+|OneLib Arduino mode:           |25519  |25571|
+|OneLib AVR pin mode:           |44183  |44041|
+|OneLib VoidPin mode:           |58609  |59022|
+
+### digitalRead
+
+| Framework       |  \# Ops | Debounced |
+|-----------------|---------|-----------|
+|Arduino pin input:             |28951  ||
+|OneLib Arduino input:          |29028  |14825|
+|OnePin pin input:              |58620  |31395|
+|OneLib VoidPin input:          |58907  |31395|
+
+### digitalWrite
+
+| Framework       |  \# Ops | Debounced |
+|-----------------|---------|-----------|
+|Arduino pin output:            |28668  ||
+|OneLib Arduino output:         |28762  |28975|
+|OnePin pin output:             |51054  |51143|
+|OneLib VoidPin output:         |58902  |58721|
 ## Disassembly compare
 
 comparing part of the main function from the example above with the equivalent arduino code.

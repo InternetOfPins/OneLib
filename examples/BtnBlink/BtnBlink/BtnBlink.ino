@@ -5,31 +5,23 @@
 #include <OneAVR.h>
 
 using namespace OneLib;
-
-//consuming the object with a function
-template<class Pin>
-inline void blink(int t) {
-  Pin::on();
-  delay(t);
-  Pin::off();
-}
+using namespace OneLib::Avr;
+using namespace OneLib::Avr::AtMega328p;
 
 //static hardware description
-typedef Avr::Pin<AtMega328p::portB,5> Led;//pin 13 on arduino
-typedef Avr::Pin<AtMega328p::portD,-4> EncBtn;//with reverse logic included
-// EncBtn encBtn;//and object of type EncBtn (can use operators)
+typedef Pin<PortB,5> Led;//pin 13 on arduino
+typedef Pin<PortD,-4> EncBtn;//with reverse logic included
 
 void setup() {
   Led::modeOut();
   EncBtn::modeInUp();
 }
 
+//toggles on/off as specified in ms
+inline bool tog(unsigned int on,unsigned int off) {return (millis()%(on+off))<on;}
+
+//blink with no delay
 void loop() {
-  if (EncBtn()) {//converts to bool => reads the pin!
-    blink<Led>(10);
-    delay(90);
-  } else {
-    blink<Led>(100);
-    delay(100);
-  }
+  if (EncBtn()) Led::set(tog(10,90));
+  else Led::set(tog(100,100));
 }
