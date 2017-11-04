@@ -1,22 +1,27 @@
 /* -*- C++ -*- */
 
-template<class T>
-class Maybe {
-  enum {Just<T>,Nothing<T>};
+template<typename T> struct Maybe {};
+template<typename T> class Nothing:public Maybe<T> {};
+template<typename T> class Just:public Maybe<T> {
+  public:
+    inline Just(T o):value(o) {}
+    inline T fromJust() const {return value;}
+  protected:
+    T value;
 };
 
-template<typename T> bool isJust(Just<T>){return true;}
-template<typename T> bool isJust(Nothing<T>){return false;}
-template<typename T> T fromJust(Just<T> jt) {return jt.fromJust();}
+template<typename T> bool isJust(Just<T>) {return true;}
+template<typename T> bool isJust(Nothing<T>) {return false;}
+template<typename T> T fromJust(Just<T> o) {o.fromJust();}
 
-template<class T,class ...Args>
-struct Lazyness {
-  template<T (*f)(Args...),Args ... values>
-  struct Lazy {
-    inline T operator()() {return isJust(result)?fromJust(result):fromJust(result=Just<T>((*f)(values...)));}
-    protected:
-      Maybe<T> result=Nothing<T>();
-  };
+template<typename res,typename ... types>
+class Function {
+  public:
+    Function(res (*fn)(types...)):fn(fn) {}
+    template<types...>
+    res operator()(types... args) {return (*fn)(args...);}
+  protected:
+    res (*fn)(types...);
 };
 
 template<class O>
@@ -25,14 +30,14 @@ struct Flux {
 };
 
 template<class O>
-class List {
+class Array {
   public:
-    List(O* addr,unsigned long len):addr(addr),len(len) {}
+    Array(O* addr,unsigned long len):addr(addr),len(len) {}
     inline void next() {++addr;--len;}
     inline operator O() {return *addr;}
     inline unsigned long sz() {return len;}
     template<class S,class T>
-    inline List<T> map(auto f,List<S> list) {}
+    inline Array<T> map(auto f,Array<S> list) {}
   protected:
     O* addr;
     unsigned long len;

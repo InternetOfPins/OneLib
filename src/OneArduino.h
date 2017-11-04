@@ -6,9 +6,9 @@
 
   namespace OneLib {
     namespace Arduino {
-      template<int pin>
+      template<const int pin>
       struct PinBase {
-        static inline void mode(uint8_t m) {pinMode(pin,m);}
+        static inline void mode(const uint8_t m) {pinMode(pin,m);}
         static inline void modeOut() {pinMode(pin,OUTPUT);}
         static inline void modeIn() {pinMode(pin,INPUT);}
         static inline void modeInUp() {pinMode(pin,INPUT_PULLUP);}

@@ -74,4 +74,42 @@
     template<class O,unsigned long delta>
     using Debouncer=Debounce<O,delta>;
   };
+
+  //attach an action to pin change (input)
+  template<class O,void(*f)()>
+  class OnChange:public O {
+    public:
+      OnChange():last(O::in()) {}
+      inline operator bool() {return in();}
+      bool in() {
+        bool n=O::in();
+        if (n!=last) f();
+        return last=n;
+      }
+    protected: bool last;
+  };
+  template<class O,void(*f)()>
+  class OnRise:public O {
+    public:
+      OnRise():last(O::in()) {}
+      inline operator bool() {return in();}
+      bool in() {
+        bool n=O::in();
+        if (n&&n!=last) f();
+        return last=n;
+      }
+    protected: bool last;
+  };
+  template<class O,void(*f)()>
+  class OnFall:public O {
+    public:
+      OnFall():last(O::in()) {}
+      inline operator bool() {return in();}
+      bool in() {
+        bool n=O::in();
+        if (!(n||n==last)) f();
+        return last=n;
+      }
+    protected: bool last;
+  };
 #endif
