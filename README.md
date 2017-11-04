@@ -50,6 +50,8 @@ void loop() {
 
 ## Generated code
 
+_this data can be outdated_
+
 **Arduino BtnBlink**
 
 Program:    1154 bytes (3.5% Full)
@@ -62,47 +64,37 @@ Program:     702 bytes (2.1% Full)
 
 Data:          9 bytes (0.4% Full)
 
-## Example
-
-**multi-blink without delay**
-
-```c++
-#include <OneAVR.h>
-
-using namespace OneLib;
-
-template<unsigned int on,unsigned int off>
-inline bool tog() {return (millis()%(on+off))<on;}
-
-//static hardware description
-typedef Avr::Pin<AtMega328p::portB,5> Led1;//pin 13 on arduino
-typedef Avr::Pin<AtMega328p::portC,3> Led2;//pin A3 on arduino
-
-void setup() {
-  Led1::modeOut();
-  Led2::modeOut();
-}
-
-void loop() {
-  Led1::set(tog<10,90>());
-  Led2::set(tog<500,500>());
-}
-```
-
 ## Composability
 Experiment with abstractions to provide composable pin behavior
 
-**ex: adding software debounce to a pin**
+### Software debounce to a pin
 
 This is also a zero cost abstraction, meaning that the composition is code equivalent to doing that software debounce on the client function.
 
-**advantages:** software debounce can be added outside a library
-
-ex: **reverse logic**
+### Reverse logic
 
 Check for negative pin number and overlays a reverse logic.
 
 This behavior can also be composed into a pin.
+
+It is composed by OneLib::OnePin to provide logic invertion when a negative pin or bit position is given.
+
+This composition is transparent on non-invertible pins.
+
+### Pin-change action
+
+Attaches a function to be called whenever the pin changes
+
+* OnRise - changed to up state
+* OnFall - changed to down state
+* OnChange - both directions
+
+### State record
+
+state record is done by 2 layers, one storing the data (inner) and other setting the record (outer). This is needed for debounce and pin change actions.
+
+* LastState - inner layer containing the last state data
+* RecState - outer layer storing the last read state on exit
 
 ### Examples
 
