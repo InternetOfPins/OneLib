@@ -36,7 +36,7 @@ void ok() {Serial<<"Ok";}
 
 //static hardware description
 typedef Pin<A3> Led;//pin A3 on arduino
-typedef OnRise<Debouncer<Pin<-4>,30>,ok> Btn;//encoder button with pullup (reverse logic)
+typedef RecState<OnRise<Debouncer<LastState<Pin<-4>>,30>,ok>> Btn;//encoder button with pullup (reverse logic)
 Btn btn;
 
 void setup() {
@@ -52,7 +52,7 @@ void setup() {
 }
 
 void loop() {
-  Led::set(btn.in()?tog(20,180):tog(100,100));
+  Led::set(btn.in()?tog(10,90):tog(100,100));
   // Led::set(tog(500,500));
   u8g2.firstPage();
   do u8g2.drawStr(0,8,"OneLib!");

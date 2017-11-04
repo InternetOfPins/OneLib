@@ -27,6 +27,7 @@
       template<bool T>
       static inline void set() {T?on():off();}//compiletime
       static inline void set(bool v) {v?on():off();}//runtime
+      // static inline void setLast(bool) {}
     } voidPin;//or its objective version
 
     //if needed invert pin logic or be absent : constexpr^0
@@ -37,6 +38,28 @@
         static inline void on() {isOn?O::off():O::on();}
         static inline void off() {isOn?O::on():O::off();}
         inline operator bool() {return this->in();}
+    };
+
+    //pin state record
+    template<class O>
+    class LastState:public O {
+      public:
+        inline LastState():lastState(O::in()) {}
+        inline bool in() {return O::in();}
+        inline bool getLast() {return lastState;}
+        inline bool setLast(bool v) {return lastState=v;}
+      protected:
+        bool lastState;
+    };
+
+    //pin state record
+    template<class O>
+    class RecState:public O {
+      public:
+        inline bool in() {return setLast(O::in());}
+        inline bool getLast() {return lastState;}
+      protected:
+        bool lastState;
     };
 
     //debounce the `on` state of a pin
@@ -61,55 +84,52 @@
     class Debounce:public O {
       public:
         inline bool in() {
-          if (millis()-lastSet<delta) return lastState;
+          if (millis()-lastSet<delta) return O::getLast();
           lastSet=millis();
-          return lastState=O::in();
+          return O::in();
         }
         inline operator bool() {return in();}
       protected:
         unsigned long lastSet=-delta;
-        bool lastState;
     };
 
     template<class O,unsigned long delta>
     using Debouncer=Debounce<O,delta>;
   };
 
-  //attach an action to pin change (input)
+    //attach an action to pin change (input)
+  //when pin changes
   template<class O,void(*f)()>
   class OnChange:public O {
     public:
-      OnChange():last(O::in()) {}
+      OnChange() {}
       inline operator bool() {return in();}
       bool in() {
         bool n=O::in();
-        if (n!=last) f();
-        return last=n;
+        if (n!=O::getLast()) f();
+        return n;
       }
-    protected: bool last;
   };
+  //when pin rises
   template<class O,void(*f)()>
   class OnRise:public O {
     public:
-      OnRise():last(O::in()) {}
       inline operator bool() {return in();}
       bool in() {
         bool n=O::in();
-        if (n&&n!=last) f();
-        return last=n;
+        if (n&&n!=O::getLast()) f();
+        return n;
       }
-    protected: bool last;
   };
+  //when pin falls
   template<class O,void(*f)()>
   class OnFall:public O {
     public:
-      OnFall():last(O::in()) {}
       inline operator bool() {return in();}
       bool in() {
         bool n=O::in();
-        if (!(n||n==last)) f();
-        return last=n;
+        if (!(n||n==O::getLast())) f();
+        return n;
       }
-    protected: bool last;
   };
 #endif
