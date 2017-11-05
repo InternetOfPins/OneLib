@@ -1,11 +1,11 @@
 {
-  "name": "OneKey",
-  "keywords": "Key, Pin, Keyboard, Driver",
-  "description": "composable keys",
+  "name": "OneLib",
+  "keywords": "Zero-cost overlay pin framework debounce pin pinchange virtual pins",
+  "description": "Zero cost overlay for pin frameworks",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/neu-rah/...",
+    "url": "https://github.com/neu-rah/OneLib",
     "branch": "master"
   },
   "frameworks": "arduino",

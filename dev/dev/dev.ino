@@ -5,10 +5,6 @@
 // #include <OneAVR.h>
 #include <OneArduino.h>
 
-// #define pinMode(p,m) Arduino::Pin<p>::mode(m)
-// #define digitalRead(p) Arduino::Pin<p>().in()
-// #define digitalWrite(p,d) Arduino::Pin<p>().set(o)
-
 #include <Arduino.h>
 #include <Print.h>
 #include <SPI.h>
@@ -20,6 +16,12 @@ using namespace OneLib::Arduino;
 // using namespace OneLib::AtMega328p;
 // using namespace OneLib::AtMega328p::ArduinoPins;*----------
 
+// inline void pinMode(const VPinBase& p,uint8_t mode) {p.mode(mode);}
+// inline int digitalRead(const VPinBase& p) {return p.in();}
+// inline void digitalWrite(const VPinBase& p,uint8_t v) {return p.set(v);}
+// inline void pinMode(VPinBase& p,uint8_t mode) {p.mode(mode);}
+// inline int digitalRead(VPinBase& p) {return p.in();}
+// inline void digitalWrite(VPinBase& p,uint8_t v) {return p.set(v);}
 
 #define USE_HWSPI
 #define U8_DC 9
@@ -36,8 +38,27 @@ void ok() {Serial<<"Ok";}
 
 //static hardware description
 typedef Pin<A3> Led;//pin A3 on arduino
-typedef RecState<OnRise<Debouncer<LastState<Pin<-4>>,30>,ok>> Btn;//encoder button with pullup (reverse logic)
+typedef RecState<OnRise<Debouncer<Pin<-4>,30>,ok>> Btn;//encoder button with pullup (reverse logic)
 Btn btn;
+VPin<Btn> vbtn(btn);
+Led led;
+VPin<Led> vled(led);
+
+// template<class A,class B>
+// class Encoder {
+//   public:
+//     inline int getPosition() {return pos;}
+//     static void encoderInUpdateA() {
+//       if (A()::in()^B()::in()) pos--;
+//       else pos++;
+//     }
+//     static void encoderInUpdateB() {
+//       if (A()::in()^B()::in()) pos++;
+//       else pos--;
+//     }
+//   protected:
+//     volatile int pos=0;
+// };
 
 void setup() {
   Serial.begin(115200);
@@ -52,7 +73,8 @@ void setup() {
 }
 
 void loop() {
-  Led::set(btn.in()?tog(10,90):tog(100,100));
+  // digitalWrite(led,btn.in()?tog(10,90):tog(100,100));
+  vled.set(vbtn.in()?tog(10,90):tog(100,100));
   // Led::set(tog(500,500));
   u8g2.firstPage();
   do u8g2.drawStr(0,8,"OneLib!");
