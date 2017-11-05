@@ -69,6 +69,7 @@
         static inline void set() {T?on():off();}
         static inline void set(bool v) {v?on():off();}
         static inline bool in() {return Port::template in<pin>();}
+        static inline bool rawIn() {return in();}
       };
       template<class Port,int pin>
       using Pin=LogicPinBase<PinBase<Port,pin<0?-pin:pin>,pin<0>;

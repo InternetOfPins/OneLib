@@ -1,7 +1,7 @@
 #ifdef DEBUG
   #include <streamFlow.h>
 #endif
-// #include <Extras.h>
+#include <Extras.h>
 // #include <OneAVR.h>
 #include <OneArduino.h>
 
@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <U8g2lib.h>
+#include <pcint.h>
 
 using namespace OneLib;
 using namespace OneLib::Arduino;
@@ -44,21 +45,39 @@ VPin<Btn> vbtn(btn);
 Led led;
 VPin<Led> vled(led);
 
-// template<class A,class B>
-// class Encoder {
-//   public:
-//     inline int getPosition() {return pos;}
-//     static void encoderInUpdateA() {
-//       if (A()::in()^B()::in()) pos--;
-//       else pos++;
-//     }
-//     static void encoderInUpdateB() {
-//       if (A()::in()^B()::in()) pos++;
-//       else pos--;
-//     }
-//   protected:
-//     volatile int pos=0;
-// };
+class Encoder {
+  public:
+    Encoder(VPinBase& a,VPinBase& b):a(a),b(b) {}
+    inline int getPosition() {return pos;}
+    void updateA() {
+      if (a.logicIn()^b.logicIn()) pos--;
+      else pos++;
+    }
+    void updateB() {
+      if (a.logicIn()^b.logicIn()) pos++;
+      else pos--;
+    }
+  protected:
+    VPinBase& a;
+    VPinBase& b;
+    volatile int pos=0;
+};
+
+extern Encoder q;
+typedef MFunc<Encoder>::With<&q,&Encoder::updateA> EncAUpdate;
+typedef MFunc<Encoder>::With<&q,&Encoder::updateB> EncBUpdate;
+
+// void (*updateEncA)()=MFunc<Encoder,void>::With<q,encoderInUpdate>caller;
+typedef RecState<OnChange<Debouncer<Pin<2>,1>,EncAUpdate::caller>> EncA;
+typedef RecState<OnChange<Debouncer<Pin<3>,1>,EncBUpdate::caller>> EncB;
+EncA a_;
+EncB b_;
+VPin<EncA> a(a_);
+VPin<EncB> b(b_);
+Encoder q(a,b);
+
+void fx() {Serial<<"got it!"<<endl;};
+void (*x)()=Func<void>::With<fx>::caller;
 
 void setup() {
   Serial.begin(115200);
@@ -70,9 +89,17 @@ void setup() {
   u8g2.setColorIndex(1);
   Led::modeOut();
   Btn::modeInUp();
+  EncA::modeInUp();
+  EncB::modeInUp();
+  PCattachInterrupt<2>(EncAUpdate::caller,CHANGE);
+  PCattachInterrupt<3>(EncBUpdate::caller,CHANGE);
+  //auto f=MFunc<Encoder>::With<&q,&Encoder::updateA>::caller;
 }
 
 void loop() {
+  // a.in();
+  // b.in();
+  Serial<<q.getPosition()<<endl;
   // digitalWrite(led,btn.in()?tog(10,90):tog(100,100));
   vled.set(vbtn.in()?tog(10,90):tog(100,100));
   // Led::set(tog(500,500));

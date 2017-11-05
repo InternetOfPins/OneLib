@@ -9,13 +9,63 @@
 
   namespace OneLib {
 
+    //memory handler --------------------------------------------------------
     template<class T>
     struct Mem {
       static inline T get(const T* addr) {return *addr;}
       static inline T set(T* addr,const T v) {return *addr=v;}
     };
 
-    //void pin, use this if no pin is to be used
+    //function handler ------------------------------------------------------
+    template<typename... types> struct Func;
+
+    template<> struct Func<void> {
+      template<void (*fn)()>
+      struct With {
+        static inline void caller() {(*fn)();}
+      };
+    };
+
+    template<typename res> struct Func<res> {
+      template<res (*fn)()>
+      struct With {
+        static inline res caller() {return (*fn)();}
+      };
+    };
+
+    template<typename res,typename... types>
+    struct Func<res,types...> {
+      template<res (*fn)(types...),types... args>
+      struct With {
+        static inline res caller() {return (*fn)(args...);}
+      };
+    };
+
+    //object method handler ------------------------------------------------
+    template<typename... types> struct MFunc;
+
+    template<typename O> struct MFunc<O> {
+      template<O* o,void (O::*fn)()>
+      struct With {
+        static inline void caller() {(o->*fn)();}
+      };
+    };
+
+    template<typename O,typename res> struct MFunc<O,res> {
+      template<O* o,res (O::*fn)()>
+      struct With {
+        static inline res caller() {return (o->*fn)();}
+      };
+    };
+
+    template<typename O,typename res,typename... types>struct MFunc<O,res,types...> {
+      template<O* o,res (O::*fn)(types...),types... args>
+      struct With {
+        static inline res caller() {return (o->*fn)(args...);}
+      };
+    };
+
+    //void pin, use this if no pin is to be used ------------------------------
     struct VoidPin {
       inline operator bool() {return in();}
       static inline void modeOut() {}
@@ -24,42 +74,42 @@
       static inline void on() {}
       static inline void off() {}
       static inline bool in() {return false;}
+      static inline bool rawIn() {return in();}
+      static inline bool logicIn() {return in();}
       template<bool T>
       static inline void set() {T?on():off();}//compiletime
       static inline void set(bool v) {v?on():off();}//runtime
       // static inline void setLast(bool) {}
     } voidPin;//or its objective version
 
+    //-----------------------------------------------------------------------
     //if needed invert pin logic or be absent : constexpr^0
     template<class O,bool isOn>
     class LogicPinBase:public O {
       public:
         inline bool in() {return this->O::in()^isOn;}
+        inline bool logicIn() {return in();}
         static inline void on() {isOn?O::off():O::on();}
         static inline void off() {isOn?O::on():O::off();}
         inline operator bool() {return this->in();}
     };
 
-    //pin state record
-    // template<class O>
-    class LastState/*:public O*/ {
-      // public:
-      //   inline LastState():lastState(O::in()) {}
-      //   inline bool in() {return O::in();}
+    //store last pin state
+    class LastState {
       protected:
         inline bool getLast() {return lastState;}
         inline bool setLast(bool v) {return lastState=v;}
         bool lastState;
     };
 
-    //pin state record
+    //pin state record, update last pin state after reading input
     template<class O>
     class RecState:public O,protected virtual LastState {
       public:
         inline bool in() {return setLast(O::in());}
     };
 
-    //debounce the `on` state of a pin
+    //debounce the `on` state of a pin -- do we need this?
     template<class O,unsigned long delta>
     class DebounceOn:public O,protected virtual LastState {
       public:
@@ -76,6 +126,7 @@
         unsigned long lastOn=-delta;
     };
 
+    //-------------------------------------------------------------
     //debounce pin state change
     template<class O,unsigned long delta>
     class Debounce:public O,protected virtual LastState {
@@ -102,7 +153,7 @@
         inline operator bool() {return in();}
         inline bool in() {
           bool n=O::in();
-          if (n!=O::getLast()) f();
+          if (n!=getLast()) f();
           return n;
         }
     };
@@ -146,6 +197,8 @@
         virtual void on()=0;
         virtual void off()=0;
         virtual bool in()=0;
+        virtual bool rawIn()=0;
+        virtual bool logicIn()=0;
         template<bool T>
         inline void set() {T?on():off();}//compiletime
         inline void set(bool v) {v?on():off();}//runtime
@@ -165,6 +218,8 @@
         virtual void on() {pin.on();}
         virtual void off() {pin.off();}
         virtual bool in() {return pin.in();}
+        virtual bool rawIn() {return pin.rawIn();}
+        virtual bool logicIn() {return pin.logicIn();}
       protected:
         O& pin;
     };

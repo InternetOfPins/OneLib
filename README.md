@@ -116,30 +116,31 @@ Test using:
 
 ### pinMode
 
-| Framework       |  \# Ops | Debounced |
-|-----------------|---------|-----------|
-|Arduino pin mode:              |25632  ||
-|OneLib Arduino mode:           |25519  |25571|
-|OneLib AVR pin mode:           |44183  |44041|
-|OneLib VoidPin mode:           |58609  |59022|
+| Test                          |\#Ops  |Debounced|VPin|
+|------------------------------:|------:|------:|------:|
+|Arduino pin mode:              |24406  |       |       |
+|OneLib Arduino mode:           |23786  |23842  |23964  |
+|OneLib AVR pin mode:           |43952  |44041  |44267  |
+|OneLib VoidPin mode:           |58604  |58721  |59022  |
 
 ### digitalRead
 
-| Framework       |  \# Ops | Debounced |
-|-----------------|---------|-----------|
-|Arduino pin input:             |28951  ||
-|OneLib Arduino input:          |29028  |14825|
-|OnePin pin input:              |58620  |31395|
-|OneLib VoidPin input:          |58907  |31395|
-
+| Test                          |\#Ops  |Debounced|VPin|
+|------------------------------:|------:|------:|------:|
+|Arduino pin input:             |28943  |       |       |
+|OneLib Arduino input:          |25929  |11893  |25991  |
+|OnePin pin input:              |58617  |15698  |59020  |
+|OneLib VoidPin input:          |58601  |16602  |59021  |
 ### digitalWrite
 
-| Framework       |  \# Ops | Debounced |
-|-----------------|---------|-----------|
-|Arduino pin output:            |28668  ||
-|OneLib Arduino output:         |28762  |28975|
-|OnePin pin output:             |51054  |51143|
-|OneLib VoidPin output:         |58902  |58721|
+| Test                          |\#Ops  |Debounced|VPin|
+|------------------------------:|------:|------:|------:|
+|Arduino pin output:            |26267  |       |       |
+|OneLib Arduino output:         |25717  |25912  |25780  |
+|OnePin pin output:             |51050  |51407  |51144  |
+|OneLib VoidPin output:         |58595  |59022  |58721  |
+
+
 ## Disassembly compare
 
 comparing part of the main function from the example above with the equivalent arduino code.

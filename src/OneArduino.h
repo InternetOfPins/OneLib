@@ -15,6 +15,8 @@
         static inline void on() {digitalWrite(pin,HIGH);}
         static inline void off() {digitalWrite(pin,LOW);}
         static inline bool in() {return digitalRead(pin);}
+        static inline bool rawIn() {return digitalRead(pin);}
+        static inline bool logicIn() {return digitalRead(pin);}
         template<bool T>
         static inline void set() {T?on():off();}
         static inline void set(bool v) {v?on():off();}
