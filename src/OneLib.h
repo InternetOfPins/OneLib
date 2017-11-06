@@ -191,6 +191,7 @@
             case INPUT_PULLUP: modeInUp();break;
           }
         }
+        virtual void begin()=0;
         virtual void modeOut()=0;
         virtual void modeIn()=0;
         virtual void modeInUp()=0;
@@ -208,10 +209,11 @@
     template<>inline void VPinBase::mode<INPUT_PULLUP>() {modeInUp();}
 
     template<class O>
-    class VPin:public VPinBase  {
+    class OnePin:public VPinBase  {
       public:
         // VPin():pin(O()) {}
-        VPin(O& o):pin(o) {}
+        OnePin(O& o):pin(o) {}
+        virtual void begin() {pin.begin();}
         virtual void modeOut() {pin.modeOut();}
         virtual void modeIn() {pin.modeIn();}
         virtual void modeInUp() {pin.modeInUp();}
@@ -223,6 +225,5 @@
       protected:
         O& pin;
     };
-
   };
 #endif

@@ -63,16 +63,27 @@
         static inline void modeOut() {Port::template modeOut<pin>();}
         static inline void modeIn() {Port::template modeIn<pin>();}
         static inline void modeInUp() {Port::template modeInUp<pin>();}
+        static inline bool in() {return Port::template in<pin>();}
+        static inline bool rawIn() {return in();}
         static inline void on() {Port::template on<pin>();}
         static inline void off() {Port::template off<pin>();}
         template<bool T>
         static inline void set() {T?on():off();}
         static inline void set(bool v) {v?on():off();}
-        static inline bool in() {return Port::template in<pin>();}
-        static inline bool rawIn() {return in();}
       };
+
       template<class Port,int pin>
       using Pin=LogicPinBase<PinBase<Port,pin<0?-pin:pin>,pin<0>;
+
+      template<class Port,int pin>
+      struct InputPin:public Pin<Port,pin> {
+        static inline void begin() {if (pin<0) modeInUp(); else modeIn();}
+      };
+
+      template<class Port,int pin>
+      struct OutputPin:public Pin<Port,pin> {
+        static inline void begin() {modeOut();}
+      };
 
       namespace AtMega328p {
         typedef Avr::Port<0x23> PortB;
@@ -91,6 +102,10 @@
           };
           template<int8_t pin>
           using Pin = Avr::Pin<Avr::Port<pinToPort[pin<0?-pin:pin]>,pin<0?-pinToBit[pin<0?-pin:pin]:pinToBit[pin<0?-pin:pin]>;
+          template<int8_t pin>
+          using InputPin = Avr::InputPin<Avr::Port<pinToPort[pin<0?-pin:pin]>,pin<0?-pinToBit[pin<0?-pin:pin]:pinToBit[pin<0?-pin:pin]>;
+          template<int8_t pin>
+          using OutputPin = Avr::OutputPin<Avr::Port<pinToPort[pin<0?-pin:pin]>,pin<0?-pinToBit[pin<0?-pin:pin]:pinToBit[pin<0?-pin:pin]>;
         }
       };
 

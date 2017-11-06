@@ -2,7 +2,7 @@
   #include <streamFlow.h>
 #endif
 #include <Extras.h>
-// #include <OneAVR.h>
+#include <OneAVR.h>
 #include <OneArduino.h>
 
 #include <Arduino.h>
@@ -14,15 +14,9 @@
 
 using namespace OneLib;
 using namespace OneLib::Arduino;
-// using namespace OneLib::AtMega328p;
-// using namespace OneLib::AtMega328p::ArduinoPins;*----------
-
-// inline void pinMode(const VPinBase& p,uint8_t mode) {p.mode(mode);}
-// inline int digitalRead(const VPinBase& p) {return p.in();}
-// inline void digitalWrite(const VPinBase& p,uint8_t v) {return p.set(v);}
-// inline void pinMode(VPinBase& p,uint8_t mode) {p.mode(mode);}
-// inline int digitalRead(VPinBase& p) {return p.in();}
-// inline void digitalWrite(VPinBase& p,uint8_t v) {return p.set(v);}
+// using namespace OneLib::Avr;
+// using namespace OneLib::Avr::AtMega328p;
+// using namespace OneLib::Avr::AtMega328p::ArduinoPins;
 
 #define USE_HWSPI
 #define U8_DC 9
@@ -35,19 +29,24 @@ U8G2_PCD8544_84X48_1_4W_HW_SPI u8g2(U8G2_R0, U8_CS, U8_DC , U8_RST);
 //the result of this function will toggle
 inline bool tog(unsigned int on,unsigned int off) {return (millis()%(on+off))<on;}
 
-void ok() {Serial<<"Ok";}
+void ok() {Serial<<"ok"<<endl;}
 
 //static hardware description
-typedef Pin<A3> Led;//pin A3 on arduino
-typedef RecState<OnRise<Debouncer<Pin<-4>,30>,ok>> Btn;//encoder button with pullup (reverse logic)
+typedef RecState<OnRise<Debouncer<InputPin<-4>,30>,ok>> Btn;//encoder button with pullup (reverse logic)
 Btn btn;
-VPin<Btn> vbtn(btn);
+OnePin<Btn> vbtn(btn);
+
+typedef OutputPin<A3> Led;//pin A3 on arduino
 Led led;
-VPin<Led> vled(led);
+OnePin<Led> vled(led);
 
 class Encoder {
   public:
     Encoder(VPinBase& a,VPinBase& b):a(a),b(b) {}
+    void begin() {
+      a.begin();
+      b.begin();
+    }
     inline int getPosition() {return pos;}
     void updateA() {
       if (a.logicIn()^b.logicIn()) pos--;
@@ -57,27 +56,36 @@ class Encoder {
       if (a.logicIn()^b.logicIn()) pos++;
       else pos--;
     }
+
+    template<Encoder *enc>
+    using UpdateA = MFunc<Encoder>::With<enc,&Encoder::updateA>;
+
+    template<Encoder *enc>
+    using UpdateB = MFunc<Encoder>::With<enc,&Encoder::updateB>;
+
+    template<Encoder *enc,class O,uint8_t deb=1>
+    using PinA=RecState<OnChange<O,UpdateA<enc>::caller>>;
+
+    template<Encoder *enc,class O,uint8_t deb=1>
+    using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
+
   protected:
     VPinBase& a;
     VPinBase& b;
     volatile int pos=0;
 };
 
-extern Encoder q;
-typedef MFunc<Encoder>::With<&q,&Encoder::updateA> EncAUpdate;
-typedef MFunc<Encoder>::With<&q,&Encoder::updateB> EncBUpdate;
+#define mkEncoder(q,pina,pinb)\
+  extern Encoder q;\
+  typedef Encoder::PinA<&q,Debouncer<InputPin<pina>,1>> q##_EncA;\
+  typedef Encoder::PinB<&q,Debouncer<InputPin<pinb>,1>> q##_EncB;\
+  q##_EncA q##_a_;\
+  q##_EncB q##_b_;\
+  OnePin<q##_EncA> q##_a(q##_a_);\
+  OnePin<q##_EncB> q##_b(q##_b_);\
+  Encoder q(q##_a,q##_b);
 
-// void (*updateEncA)()=MFunc<Encoder,void>::With<q,encoderInUpdate>caller;
-typedef RecState<OnChange<Debouncer<Pin<2>,1>,EncAUpdate::caller>> EncA;
-typedef RecState<OnChange<Debouncer<Pin<3>,1>,EncBUpdate::caller>> EncB;
-EncA a_;
-EncB b_;
-VPin<EncA> a(a_);
-VPin<EncB> b(b_);
-Encoder q(a,b);
-
-void fx() {Serial<<"got it!"<<endl;};
-void (*x)()=Func<void>::With<fx>::caller;
+mkEncoder(qenc,-2,-3);
 
 void setup() {
   Serial.begin(115200);
@@ -87,22 +95,16 @@ void setup() {
   u8g2.begin();
   u8g2.setFont(fontName);
   u8g2.setColorIndex(1);
-  Led::modeOut();
-  Btn::modeInUp();
-  EncA::modeInUp();
-  EncB::modeInUp();
-  PCattachInterrupt<2>(EncAUpdate::caller,CHANGE);
-  PCattachInterrupt<3>(EncBUpdate::caller,CHANGE);
-  //auto f=MFunc<Encoder>::With<&q,&Encoder::updateA>::caller;
+  vled.begin();
+  vbtn.begin();
+  qenc.begin();
+  PCattachInterrupt<2>(Encoder::UpdateA<&qenc>::caller,CHANGE);
+  PCattachInterrupt<3>(Encoder::UpdateB<&qenc>::caller,CHANGE);
 }
 
 void loop() {
-  // a.in();
-  // b.in();
-  Serial<<q.getPosition()<<endl;
-  // digitalWrite(led,btn.in()?tog(10,90):tog(100,100));
-  vled.set(vbtn.in()?tog(10,90):tog(100,100));
-  // Led::set(tog(500,500));
+  Serial<<qenc.getPosition()<<endl;
+  led.set(vbtn.in()?tog(10,90):tog(100,100));
   u8g2.firstPage();
   do u8g2.drawStr(0,8,"OneLib!");
   while ( u8g2.nextPage() );
