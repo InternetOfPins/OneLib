@@ -115,31 +115,28 @@ Test using:
 * OneLib targeting raw AVR mcu.
 
 ### pinMode
-
-| Test                          |\#Ops  |Debounced|VPin|
+| Test                          |\#Ops  |Debounced|VPin |
 |------------------------------:|------:|------:|------:|
-|Arduino pin mode:              |24406  |       |       |
-|OneLib Arduino mode:           |23786  |23842  |23964  |
-|OneLib AVR pin mode:           |43952  |44041  |44267  |
-|OneLib VoidPin mode:           |58604  |58721  |59022  |
+|Arduino pin mode:              |2187   |       |       |
+|OneLib Arduino mode:           |2185   |2206   |2205   |
+|OneLib AVR mode:               |3351   |3377   |3378   |
+|OneLib VoidPin mode:           |4035   |4070   |4070   |
 
 ### digitalRead
-
-| Test                          |\#Ops  |Debounced|VPin|
+| Test                          |\#Ops  |Debounced|VPin |
 |------------------------------:|------:|------:|------:|
-|Arduino pin input:             |28943  |       |       |
-|OneLib Arduino input:          |25929  |11893  |25991  |
-|OnePin pin input:              |58617  |15698  |59020  |
-|OneLib VoidPin input:          |58601  |16602  |59021  |
+|Arduino pin input:             |2403   |       |       |
+|OneLib Arduino input:          |2185   |1095   |2205   |
+|OnePin AVR input:              |4037   |1418   |4071   |
+|OneLib VoidPin input:          |4033   |1491   |4070   |
+
 ### digitalWrite
-
-| Test                          |\#Ops  |Debounced|VPin|
+| Test                          |\#Ops  |Debounced|VPin |
 |------------------------------:|------:|------:|------:|
-|Arduino pin output:            |26267  |       |       |
-|OneLib Arduino output:         |25717  |25912  |25780  |
-|OnePin pin output:             |51050  |51407  |51144  |
-|OneLib VoidPin output:         |58595  |59022  |58721  |
-
+|Arduino pin output:            |2217   |       |       |
+|OneLib Arduino output:         |2214   |2237   |2237   |
+|OnePin AVR output:             |3746   |3780   |3781   |
+|OneLib VoidPin output:         |4032   |4071   |4070   |
 
 ## Disassembly compare
 

@@ -25,8 +25,4 @@
       using Pin=LogicPinBase<PinBase<pin<0?-pin:pin>,pin<0>;
     };
   }//namespace OneLib
-
-  // right now no advantage comes from this, we have no vpins yet
-  // #define pinMode(p,m) Arduino::Pin<p>::mode(m)
-  // #define digitalRead(p) Arduino::Pin<p>().in()
 #endif

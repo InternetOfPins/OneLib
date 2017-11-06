@@ -7,6 +7,8 @@
     #include <streamFlow.h>
   #endif
 
+  #define const
+
   namespace OneLib {
 
     //memory handler --------------------------------------------------------
@@ -87,11 +89,11 @@
     template<class O,bool isOn>
     class LogicPinBase:public O {
       public:
-        inline bool in() {return this->O::in()^isOn;}
-        inline bool logicIn() {return in();}
+        static inline bool in() {return O::in()^isOn;}
+        static inline bool logicIn() {return in();}
         static inline void on() {isOn?O::off():O::on();}
         static inline void off() {isOn?O::on():O::off();}
-        inline operator bool() {return this->in();}
+        inline operator bool() {return in();}
     };
 
     //store last pin state
@@ -203,9 +205,9 @@
         inline void set() {T?on():off();}//compiletime
         inline void set(bool v) {v?on():off();}//runtime
     };
-    template<>void VPinBase::mode<OUTPUT>() {modeOut();}
-    template<>void VPinBase::mode<INPUT>() {modeIn();}
-    template<>void VPinBase::mode<INPUT_PULLUP>() {modeInUp();}
+    template<>inline void VPinBase::mode<OUTPUT>() {modeOut();}
+    template<>inline void VPinBase::mode<INPUT>() {modeIn();}
+    template<>inline void VPinBase::mode<INPUT_PULLUP>() {modeInUp();}
 
     template<class O>
     class VPin:public VPinBase  {
