@@ -118,42 +118,6 @@ class AccelEncoder:public Encoder {
     unsigned long lastUpdate;
 };
 
-// class IncrEncoder:public Encoder {
-//   public:
-//     IncrEncoder(VPinBase& a,VPinBase& b):Encoder(a,b) {}
-//     void updateA() {
-//       bool dir=a.logicIn()^b.logicIn();
-//       if (dir!=lastDir) step=step>>1;
-//       step++;
-//       lastDir=dir;
-//       pos+=dir?-(step>>1):step>>1;
-//     }
-//     void updateB() {
-//       bool dir=a.logicIn()^b.logicIn();
-//       if (dir!=lastDir) step=(step>>1);
-//       step++;
-//       lastDir=dir;
-//       pos+=dir?step>>1:-(step>>1);
-//     }
-//
-//     template<IncrEncoder *enc>
-//     using UpdateA = MFunc<IncrEncoder>::With<enc,&IncrEncoder::updateA>;
-//
-//     template<IncrEncoder *enc>
-//     using UpdateB = MFunc<IncrEncoder>::With<enc,&IncrEncoder::updateB>;
-//
-//     template<IncrEncoder *enc,class O,uint8_t deb=1>
-//     using PinA=RecState<OnChange<O,UpdateA<enc>::caller>>;
-//
-//     template<IncrEncoder *enc,class O,uint8_t deb=1>
-//     using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
-//
-//     inline int16_t getStep() const {return step;}
-//   protected:
-//     bool lastDir=false;
-//     uint16_t step=0;
-// };
-//
 #define mkEncoder(EncoderType,enc,pina,pinb)\
   extern EncoderType enc;\
   typedef EncoderType::PinA<&enc,Debouncer<InputPin<pina>,1>> enc##_EncA;\
