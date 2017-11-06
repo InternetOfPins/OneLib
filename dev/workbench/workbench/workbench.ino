@@ -75,17 +75,96 @@ class Encoder {
     volatile int pos=0;
 };
 
-#define mkEncoder(q,pina,pinb)\
-  extern Encoder q;\
-  typedef Encoder::PinA<&q,Debouncer<InputPin<pina>,1>> q##_EncA;\
-  typedef Encoder::PinB<&q,Debouncer<InputPin<pinb>,1>> q##_EncB;\
-  q##_EncA q##_a_;\
-  q##_EncB q##_b_;\
-  OnePin<q##_EncA> q##_a(q##_a_);\
-  OnePin<q##_EncB> q##_b(q##_b_);\
-  Encoder q(q##_a,q##_b);
+class AccelEncoder:public Encoder {
+  public:
+    AccelEncoder(VPinBase& a,VPinBase& b):Encoder(a,b),lastUpdate(millis()) {}
+    static const uint16_t accelTop=512;
+    static const uint16_t accelUp=8;
+    static const uint16_t accelDown=2;
+    void updateA() {
+      unsigned int m=millis();
+      accel-=(m-lastUpdate)*accelDown;
+      lastUpdate=m;
+      if (accel<1) accel=1;
+      if (a.logicIn()^b.logicIn()) pos-=accel;
+      else pos+=accel;
+      if (accel<accelTop) accel+=accelUp;
+    }
+    void updateB() {
+      unsigned int m=millis();
+      accel-=m-lastUpdate;
+      lastUpdate=m;
+      if (accel<0) accel=0;
+      if (a.logicIn()^b.logicIn()) pos+=accel;
+      else pos-=accel;
+      if (accel<accelTop) accel+=accelUp;
+    }
 
-mkEncoder(qenc,-2,-3);
+    template<AccelEncoder *enc>
+    using UpdateA = MFunc<AccelEncoder>::With<enc,&AccelEncoder::updateA>;
+
+    template<AccelEncoder *enc>
+    using UpdateB = MFunc<AccelEncoder>::With<enc,&AccelEncoder::updateB>;
+
+    template<AccelEncoder *enc,class O,uint8_t deb=1>
+    using PinA=RecState<OnChange<O,UpdateA<enc>::caller>>;
+
+    template<AccelEncoder *enc,class O,uint8_t deb=1>
+    using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
+
+    inline int16_t getAccel() const {return accel;}
+  protected:
+    int16_t accel=0;
+    unsigned long lastUpdate;
+};
+
+// class IncrEncoder:public Encoder {
+//   public:
+//     IncrEncoder(VPinBase& a,VPinBase& b):Encoder(a,b) {}
+//     void updateA() {
+//       bool dir=a.logicIn()^b.logicIn();
+//       if (dir!=lastDir) step=step>>1;
+//       step++;
+//       lastDir=dir;
+//       pos+=dir?-(step>>1):step>>1;
+//     }
+//     void updateB() {
+//       bool dir=a.logicIn()^b.logicIn();
+//       if (dir!=lastDir) step=(step>>1);
+//       step++;
+//       lastDir=dir;
+//       pos+=dir?step>>1:-(step>>1);
+//     }
+//
+//     template<IncrEncoder *enc>
+//     using UpdateA = MFunc<IncrEncoder>::With<enc,&IncrEncoder::updateA>;
+//
+//     template<IncrEncoder *enc>
+//     using UpdateB = MFunc<IncrEncoder>::With<enc,&IncrEncoder::updateB>;
+//
+//     template<IncrEncoder *enc,class O,uint8_t deb=1>
+//     using PinA=RecState<OnChange<O,UpdateA<enc>::caller>>;
+//
+//     template<IncrEncoder *enc,class O,uint8_t deb=1>
+//     using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
+//
+//     inline int16_t getStep() const {return step;}
+//   protected:
+//     bool lastDir=false;
+//     uint16_t step=0;
+// };
+//
+#define mkEncoder(EncoderType,enc,pina,pinb)\
+  extern EncoderType enc;\
+  typedef EncoderType::PinA<&enc,Debouncer<InputPin<pina>,1>> enc##_EncA;\
+  typedef EncoderType::PinB<&enc,Debouncer<InputPin<pinb>,1>> enc##_EncB;\
+  enc##_EncA enc##_a_;\
+  enc##_EncB enc##_b_;\
+  OnePin<enc##_EncA> enc##_a(enc##_a_);\
+  OnePin<enc##_EncB> enc##_b(enc##_b_);\
+  EncoderType enc(enc##_a,enc##_b);
+
+mkEncoder(IncrEncoder,qenc,-2,-3);
 
 void setup() {
   Serial.begin(115200);
@@ -98,12 +177,17 @@ void setup() {
   vled.begin();
   vbtn.begin();
   qenc.begin();
-  PCattachInterrupt<2>(Encoder::UpdateA<&qenc>::caller,CHANGE);
-  PCattachInterrupt<3>(Encoder::UpdateB<&qenc>::caller,CHANGE);
+  PCattachInterrupt<2>(IncrEncoder::UpdateA<&qenc>::caller,CHANGE);
+  PCattachInterrupt<3>(IncrEncoder::UpdateB<&qenc>::caller,CHANGE);
 }
 
+int oldPos=0;
 void loop() {
-  Serial<<qenc.getPosition()<<endl;
+  int pos=qenc.getPosition();
+  if (pos!=oldPos) {
+    Serial<<pos<<" "<<qenc.getStep()<<endl;
+    oldPos=pos;
+  }
   led.set(vbtn.in()?tog(10,90):tog(100,100));
   u8g2.firstPage();
   do u8g2.drawStr(0,8,"OneLib!");
