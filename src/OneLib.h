@@ -68,6 +68,7 @@
     //void pin, use this if no pin is to be used ------------------------------
     struct VoidPin {
       inline operator bool() {return in();}
+      static inline void begin() {}
       static inline void modeOut() {}
       static inline void modeIn() {}
       static inline void modeInUp() {}

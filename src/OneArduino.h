@@ -8,6 +8,7 @@
     namespace Arduino {
       template<const int pin>
       struct PinBase {
+        static inline void begin() {}
         static inline void mode(const uint8_t m) {pinMode(pin,m);}
         static inline void modeOut() {pinMode(pin,OUTPUT);}
         static inline void modeIn() {pinMode(pin,INPUT);}

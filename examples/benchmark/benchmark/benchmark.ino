@@ -10,13 +10,13 @@ using namespace OneLib::Arduino;
 
 typedef Avr::Pin<PortB,5> Led;//pin 13 on arduino
 Led _led;
-VPin<Led> led(_led);
+OnePin<Led> led(_led);
 
 typedef Pin<13> Pin13;
 Pin13 _pin13;
-VPin<Pin13> pin13(_pin13);
+OnePin<Pin13> pin13(_pin13);
 
-VPin<VoidPin> vvoidPin(voidPin);
+OnePin<VoidPin> vvoidPin(voidPin);
 
 unsigned long cnt;
 unsigned long start;
@@ -46,7 +46,7 @@ unsigned long test(const char* title,auto test0,auto test1,auto test2) {
 void test() {
   Serial.println("**Benchmark**");
   Serial.println("### Control");//------------------------------------
-  Serial.println("| Test                          |\#Ops  |Debounced|VPin   |");
+  Serial.println("| Test                          |\#Ops  |Debounced|OnePin   |");
   Serial.println("|------------------------------:|------:|------:|------:|");
   test("Empty function",
     [](){},
@@ -69,7 +69,7 @@ void test() {
     [](){}
   );
   Serial.println("### pinMode");//------------------------------------
-  Serial.println("| Test                          |\#Ops  |Debounced|VPin   |");
+  Serial.println("| Test                          |\#Ops  |Debounced|OnePin   |");
   Serial.println("|------------------------------:|------:|------:|------:|");
   test("Empty function",
     [](){},
@@ -98,7 +98,7 @@ void test() {
   );
 
   Serial.println("### digitalRead");//------------------------------------
-  Serial.println("| Test                          |\#Ops  |Debounced|VPin   |");
+  Serial.println("| Test                          |\#Ops  |Debounced|OnePin   |");
   Serial.println("|------------------------------:|------:|------:|------:|");
   test("Empty function",
     [](){},
@@ -127,7 +127,7 @@ void test() {
   );
 
   Serial.println("### digitalWrite");//------------------------------------
-  Serial.println("| Test                          |\\#Ops  |Debounced|VPin   |");
+  Serial.println("| Test                          |\\#Ops  |Debounced|OnePin   |");
   Serial.println("|------------------------------:|------:|------:|------:|");
   test("Empty function",
     [](){},
@@ -162,5 +162,4 @@ void setup() {
   test();
 }
 
-void loop() {
-}
+void loop() {}
