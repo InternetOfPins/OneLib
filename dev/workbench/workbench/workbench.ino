@@ -128,7 +128,7 @@ class AccelEncoder:public Encoder {
   OnePin<enc##_EncB> enc##_b(enc##_b_);\
   EncoderType enc(enc##_a,enc##_b);
 
-mkEncoder(IncrEncoder,qenc,-2,-3);
+mkEncoder(AccelEncoder,qenc,-2,-3);
 
 void setup() {
   Serial.begin(115200);
@@ -141,15 +141,15 @@ void setup() {
   vled.begin();
   vbtn.begin();
   qenc.begin();
-  PCattachInterrupt<2>(IncrEncoder::UpdateA<&qenc>::caller,CHANGE);
-  PCattachInterrupt<3>(IncrEncoder::UpdateB<&qenc>::caller,CHANGE);
+  PCattachInterrupt<2>(AccelEncoder::UpdateA<&qenc>::caller,CHANGE);
+  PCattachInterrupt<3>(AccelEncoder::UpdateB<&qenc>::caller,CHANGE);
 }
 
 int oldPos=0;
 void loop() {
   int pos=qenc.getPosition();
   if (pos!=oldPos) {
-    Serial<<pos<<" "<<qenc.getStep()<<endl;
+    Serial<<pos<<" "<<endl;
     oldPos=pos;
   }
   led.set(vbtn.in()?tog(10,90):tog(100,100));
