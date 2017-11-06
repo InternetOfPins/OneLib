@@ -43,7 +43,6 @@ unsigned long test(const char* title,auto test0,auto test1,auto test2) {
   Serial.println("\t|");
 }
 
-
 void test() {
   Serial.println("**Benchmark**");
   Serial.println("### Control");//------------------------------------

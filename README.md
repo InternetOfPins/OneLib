@@ -18,7 +18,7 @@ Working with the C++ compiler at type level.
 
 **Zero-cost** meta-programming with static inline functions.
 
-**Composability** is provided by reversing the inheritance chain, letting the final user specify the concrete object or composition.
+**Composability** using c++ mixins.
 
 ## Example
 
@@ -91,18 +91,17 @@ Attaches a function to be called whenever the pin changes
 
 ### State record
 
-state record is done by 2 layers, one storing the data (inner) and other setting the record (outer). This is needed for debounce and pin change actions.
+* RecState - updates the last state of a pin after read, this must be the top mixin
 
-* LastState - inner layer containing the last state data
-* RecState - outer layer storing the last read state on exit
+Used by soft-debunce and pin change actions.
 
 ### Examples
 
 ```c++
 //soft debounced AVR pin
-typedef RecState<Debouncer<LastState<Avr::Pin<PortB,5>>,30>> Deb13;
+typedef RecState<Debouncer<Avr::Pin<PortB,5>,30>> Deb13;
 //soft debounced Arduino pin
-typedef RecState<Debouncer<LastState<Arduino::Pin<13>>>> Pin13;
+typedef RecState<Debouncer<Arduino::Pin<13>>> Pin13;
 ```
 
 ## Benchmarks

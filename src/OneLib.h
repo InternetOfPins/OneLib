@@ -7,8 +7,6 @@
     #include <streamFlow.h>
   #endif
 
-  #define const
-
   namespace OneLib {
 
     //memory handler --------------------------------------------------------
