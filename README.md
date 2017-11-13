@@ -18,7 +18,10 @@ Working with the C++ compiler at type level.
 
 **Zero-cost** meta-programming with static inline functions.
 
-**Composability** using c++ mixins.
+**Composition** using c++ mixins.
+
+**OnePin** top level pin class with virtual functions to cover low level mixins.
+This class allows delivering a generic pin, breaking the template/mixin chain.
 
 ## Example
 
@@ -54,34 +57,35 @@ _this data can be outdated_
 
 **Arduino BtnBlink**
 
-Program:    1154 bytes (3.5% Full)
+>Program:    1154 bytes (3.5% Full)
 
-Data:          9 bytes (0.4% Full)
+>Data:          9 bytes (0.4% Full)
 
 **OneLib BtnBlink**
 
-Program:     702 bytes (2.1% Full)
+>Program:     702 bytes (2.1% Full)
 
-Data:          9 bytes (0.4% Full)
+>Data:          9 bytes (0.4% Full)
 
-## Composability
-Experiment with abstractions to provide composable pin behavior
+### Features
 
-### Software debounce to a pin
+#### VoidPin
+
+Not only ignores operation as it removes the pin-output code, input code is resumed to false.
+
+#### Software debounce to a pin
 
 This is also a zero cost abstraction, meaning that the composition is code equivalent to doing that software debounce on the client function.
 
-### Reverse logic
+#### Reverse logic
 
 Check for negative pin number and overlays a reverse logic.
 
-This behavior can also be composed into a pin.
-
 It is composed by OneLib::OnePin to provide logic invertion when a negative pin or bit position is given.
 
-This composition is transparent on non-invertible pins.
+This composition is transparent on non-invertible pins (no extra code generated).
 
-### Pin-change action
+#### Pin-change action
 
 Attaches a function to be called whenever the pin changes
 
@@ -89,13 +93,13 @@ Attaches a function to be called whenever the pin changes
 * OnFall - changed to down state
 * OnChange - both directions
 
-### State record
+#### State record
 
 * RecState - updates the last state of a pin after read, this must be the top mixin
 
-Used by soft-debunce and pin change actions.
+Used by **soft-debunce** and **pin-change actions**.
 
-### Examples
+### Pin composition examples
 
 ```c++
 //soft debounced AVR pin
