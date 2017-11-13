@@ -1,0 +1,18 @@
+
+- join Func and MFunc into a single Action
+- implement soft pins with relative and absolute times
+  After<time ms> ____-------------
+  Wait<delta ms> -----____________
+  Every<delta ms> ____|____|____|___
+  Toggle<delta on ms,delta off ms> ---_---_---_---_
+- unify schedule? this is too complicated
+
+OnePin
+  RecState
+    OnChange Action
+    OnRise Action
+    OnFall Action
+    Debounce n
+    Logic
+      Logic
+        soft/hard pin
