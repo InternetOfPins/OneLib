@@ -31,7 +31,7 @@
     };
 
     template<unsigned long dblTime=600, unsigned long hldTime=2*dblTime>
-    class ClickButton:public OneButton {//from https://github.com/0xPIT/encoder with some tweaks
+    class ClickButton:public OneButton {
     public:
       ClickButton(OnePin& pin):OneButton(pin) {}
       static inline bool mustConsume(BtnState btnState)//list states that MUST be consumed
