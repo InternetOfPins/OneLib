@@ -9,7 +9,7 @@
 
     template<>class Encoder<0> {
       public:
-        Encoder(OnePinBase& a,OnePinBase& b):a(a),b(b) {}
+        Encoder(OnePin& a,OnePin& b):a(a),b(b) {}
         void begin() {
           a.begin();
           b.begin();
@@ -36,14 +36,14 @@
         using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
 
       protected:
-        OnePinBase& a;
-        OnePinBase& b;
+        OnePin& a;
+        OnePin& b;
         volatile int pos=0;
     };
 
     template<int16_t accelUp>class Encoder:public Encoder<0> {
       public:
-        Encoder(OnePinBase& a,OnePinBase& b):Encoder<0>(a,b),lastUpdate(millis()) {}
+        Encoder(OnePin& a,OnePin& b):Encoder<0>(a,b),lastUpdate(millis()) {}
         static inline uint8_t accelRate() {return accelUp;}
         static const int16_t accelTop=512;
         // static const uint16_t accelUp=8;
