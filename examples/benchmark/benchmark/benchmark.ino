@@ -10,13 +10,13 @@ using namespace OneLib::Arduino;
 
 typedef Avr::Pin<PortB,5> Led;//pin 13 on arduino
 Led _led;
-OnePin<Led> led(_led);
+OnePinHook<Led> led(_led);
 
 typedef Pin<13> Pin13;
 Pin13 _pin13;
-OnePin<Pin13> pin13(_pin13);
+OnePinHook<Pin13> pin13(_pin13);
 
-OnePin<VoidPin> vvoidPin(voidPin);
+OnePinHook<VoidPin> vvoidPin(voidPin);
 
 unsigned long cnt;
 unsigned long start;
