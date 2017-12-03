@@ -4,17 +4,19 @@
 
 Zero-cost abstractions for pin frameworks
 
-Licence: CC-BY-NC-SA
-
 ## Purpose
-Experiment with C++ (0x11) to abstract over pin based frameworks (_**ie**: Wiring, Arduino_).
 
-Open this experiment to consideration and improvement.
+Provide a set of common small libraries packed into one.
+Serve as an example of [OnePin](https://github.com/InternetOfPins/OnePin) library usage.
 
-## Technique
+## Utilities
 
-This meta-framework can overlay existing frameworks or bare-metal MCU's.
-Working with the C++ compiler at type level.
+- **Button** simple button state provider with states Open⁺ | Pressed | Hold⁺ | Released
+  ⁺ Open and Hold states can repeat
+  Pressed and Released states are unique and must be consumed
+- **ClickButton** Button variant with extra unique states DoubleClicked | Clicked 
+- **Encoder** simple quad-encoder driver
+- **AccelEncoder** Encoder variant with acceleration
 
 ## Example
 

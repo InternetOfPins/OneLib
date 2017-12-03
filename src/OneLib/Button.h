@@ -8,7 +8,7 @@
 
   // namespace OneLib {
 
-    enum BtnState:unsigned char {Open = 0,Pressed,Held,Released,Clicked,DoubleClicked,Escape};
+    enum BtnState:unsigned char {Open = 0,Pressed,Held,Released,Clicked,DoubleClicked/*,Escape*/};
 
     class OneButton {
     public:
