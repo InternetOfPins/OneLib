@@ -1,7 +1,9 @@
 #include <OneArduino.h>
+#include <OneLib/Button.h>
 
 using namespace OneLib;
 using namespace OneLib::Arduino;
+#include <OneLib/ClickButton.h>
 
 //default led
 typedef OutputPin<LED_BUILTIN> Led;
