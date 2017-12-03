@@ -16,53 +16,37 @@ Open this experiment to consideration and improvement.
 This meta-framework can overlay existing frameworks or bare-metal MCU's.
 Working with the C++ compiler at type level.
 
-**Zero-cost** meta-programming with static inline functions.
-
-**Composition** using c++ mixins.
-
-**OnePin** top level pin class with virtual functions to cover low level mixins.
-This class allows delivering a generic pin, breaking the template/mixin chain.
-
 ## Example
 
 ```c++
-#include <OneAvr.h>
+#include <OneArduino.h>
+#include <OneLib/Button.h>
 
 using namespace OneLib;
-using namespace OneLib::Avr;
-using namespace OneLib::Avr::AtMega328p;
+using namespace OneLib::Arduino;
+#include <OneLib/ClickButton.h>
 
-//static hardware description
-typedef Pin<PortB,5> Led;//pin 13 on arduino
-typedef Pin<PortD,-4> EncBtn;//with reverse logic included
+//default led
+typedef OutputPin<LED_BUILTIN> Led;
+
+#define BUTTON_PIN 4
+//pulled-up input pin with 10ms software debounce
+typedef RecState<Debounce<InputPin<-BUTTON_PIN>,10>> Btn;
+
+Btn btn;//HAL
+OnePinHook<Btn> btnHook(btn);//pin driver
+ClickButton<> oneBtn(btnHook);//button driver
 
 void setup() {
-  Led::modeOut();
-  EncBtn::modeInUp();
+  Serial.begin(115200);
+  while(!Serial);
+  Serial.println("OneLib - togLed example");
+  Serial.println("toggle led state on button press");
+  Btn::begin();
+  Led::begin();
 }
 
-//toggles on/off as specified in ms
-inline bool tog(unsigned int on,unsigned int off) {return (millis()%(on+off))<on;}
-
-//blink with no delay
 void loop() {
-  if (EncBtn()) Led::set(tog(10,90));
-  else Led::set(tog(100,100));
+  if(oneBtn.get()==BtnState::Clicked) Led::tog();
 }
 ```
-
-## Generated code
-
-_this data can be outdated_
-
-**Arduino BtnBlink**
-
->Program:    1154 bytes (3.5% Full)
-
->Data:          9 bytes (0.4% Full)
-
-**OneLib BtnBlink**
-
->Program:     702 bytes (2.1% Full)
-
->Data:          9 bytes (0.4% Full)
