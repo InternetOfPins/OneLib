@@ -7,6 +7,19 @@
   namespace OneLib {
     namespace Avr {
 
+      #include "OneLib/HAL/Mem.h"
+      #include "OneLib/HAL/Func.h"
+      #include "OneLib/HAL/Pin.h"
+
+      // #include "OneLib/Soft/Debounce.h"//avr has no millis functions, so cant have this
+      #include "OneLib/Soft/Wire.h"
+
+      #include "OneLib/Driver/OnePin.h"
+      #include "OneLib/Driver/Encoder.h"
+      // #include "OneLib/Driver/AccelEncoder.h"//avr has no millis functions, so cant have this
+      #include "OneLib/Driver/Button.h"
+      // #include "OneLib/Driver/ClickButton.h"//avr has no millis functions, so cant have this
+
       // hardwired code
       template<uint8_t reg>
       struct Reg:protected Mem<uint8_t> {
@@ -78,12 +91,15 @@
 
       template<class Port,int pin>
       struct InputPin:public Pin<Port,pin> {
-        static inline void begin() {if (pin<0) modeInUp(); else modeIn();}
+        static inline void begin() {
+          if (pin<0) Pin<Port,pin>::modeInUp();
+          else Pin<Port,pin>::modeIn();
+        }
       };
 
       template<class Port,int pin>
       struct OutputPin:public Pin<Port,pin> {
-        static inline void begin() {modeOut();}
+        static inline void begin() {Pin<Port,pin>::modeOut();}
       };
 
       namespace AtMega328p {

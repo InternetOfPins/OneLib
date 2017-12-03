@@ -6,6 +6,25 @@
 
   namespace OneLib {
     namespace Arduino {
+
+      #define CHRONOMETER
+
+      static inline unsigned long getMillis() {return millis();}
+
+      #include "OneLib/HAL/Mem.h"
+      #include "OneLib/HAL/Func.h"
+      #include "OneLib/HAL/Pin.h"
+
+      #include "OneLib/Soft/Debounce.h"
+      #include "OneLib/Soft/Wire.h"
+
+      #include "OneLib/Driver/OnePin.h"
+      #include "OneLib/Driver/Encoder.h"
+      #include "OneLib/Driver/AccelEncoder.h"
+      #include "OneLib/Driver/Button.h"
+      #include "OneLib/Driver/ClickButton.h"
+
+
       template<const int pin>
       struct PinBase {
         static inline void begin() {}
@@ -27,11 +46,11 @@
 
       template<const int pin>
       struct InputPin:public Pin<pin> {
-        static inline void begin() {if (pin<0) modeInUp(); else modeIn();}
+        static inline void begin() {if (pin<0) Pin<pin>::modeInUp(); else Pin<pin>::modeIn();}
       };
       template<const int pin>
       struct OutputPin:public Pin<pin> {
-        static inline void begin() {modeOut();}
+        static inline void begin() {Pin<pin>::modeOut();}
       };
     };
   }//namespace OneLib

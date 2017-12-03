@@ -2,7 +2,7 @@
   #include <streamFlow.h>
 #endif
 // #include <Extras.h>
-#include <OneAVR.h>
+#include <OneAvr.h>
 #include <OneArduino.h>
 // #include <OneEncoder.h>
 #include <OneLib/Button.h>
@@ -34,10 +34,15 @@ inline bool tog(unsigned int on,unsigned int off) {return (millis()%(on+off))<on
 // const uint8_t encAccel=6;
 // mkEncoder(Encoder<encAccel>,qenc,-2,-3);
 
-typedef RecState<Debouncer<InputPin<-4>,50>> Key4Pin;
+typedef RecState<Debouncer<InputPin<-4>,10>> Key4Pin;
 Key4Pin key4Pin;
 OnePinHook<Key4Pin> key4(key4Pin);
 ClickButton<> btn4(key4);
+
+OnePin* pinMap[]={};
+
+// typedef LogicPinBase<ErrorPin<1>,0> test;
+// test t;
 
 void setup() {
   Serial.begin(115200);
@@ -79,7 +84,7 @@ void loop() {
   // key4.in();
   BtnState key=btn4.get();
   if (oldKey!=key) {
-    Serial<<millis()<<" key:"<<key<<endl;
+    Serial<<getMillis()<<" key:"<<key<<endl;
     oldKey=key;
   }
   // u8g2.firstPage();

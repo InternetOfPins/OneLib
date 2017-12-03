@@ -1,8 +1,8 @@
 /* -*- C++ -*- */
-#ifndef ONEFUNC_DEF
-  #define ONEFUNC_DEF
+// #ifndef ONEFUNC_DEF
+//   #define ONEFUNC_DEF
 
-  namespace OneLib {
+  // namespace OneLib {
     //function handler ------------------------------------------------------
     template<typename... types> struct Func;
 
@@ -29,7 +29,7 @@
         static inline res caller() {return (*fn)(args...);}
       };
     };
-    
+
     //object method handler ------------------------------------------------
     template<typename... types> struct MFunc;
 
@@ -60,6 +60,6 @@
     template<typename O,O* o,void (O::*fn)()>
     struct OFunc {static inline void caller() {(o->*fn)();}};
 
-  }
+  // }
 
-#endif
+// #endif

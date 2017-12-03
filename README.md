@@ -26,7 +26,7 @@ This class allows delivering a generic pin, breaking the template/mixin chain.
 ## Example
 
 ```c++
-#include <OneAVR.h>
+#include <OneAvr.h>
 
 using namespace OneLib;
 using namespace OneLib::Avr;
