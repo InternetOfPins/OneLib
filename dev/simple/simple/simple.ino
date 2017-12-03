@@ -7,6 +7,9 @@
 using namespace OneLib;
 using namespace OneLib::Arduino;
 
+#include <OneLib/Button.h>
+#include <OneLib/ClickButton.h>
+
 typedef InputPin<-4> Btn;
 typedef OutputPin<13> Led;
 

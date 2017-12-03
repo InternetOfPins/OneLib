@@ -5,7 +5,7 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/neu-rah/OneLib",
+    "url": "https://github.com/InternetOfPins/OneLib",
     "branch": "master"
   },
   "frameworks": "arduino",
