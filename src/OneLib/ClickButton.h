@@ -58,7 +58,7 @@ using namespace OneLib;
           }
         }
       }
-    // protected:
+    protected:
       uint16_t clicks = 0;
       unsigned long lastCheck = 0;
       BtnState btnState=Open;

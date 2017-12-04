@@ -1,6 +1,6 @@
 /* -*- C++ -*- */
 // #ifndef ONELIB_ENCODER_DEF
-//   #define ONELIB_ENCODER_DEF
+   // #define ONELIB_ENCODER_DEF
 
   #include "OneLib.h"
 

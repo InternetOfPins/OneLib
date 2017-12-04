@@ -13,6 +13,7 @@
     class OneButton {
     public:
       OneButton(OnePin& pin):pin(pin) {}
+      inline void begin() {pin.begin();};
       BtnState get() {
         BtnState s=getState();
         if(s!=state)
@@ -23,7 +24,7 @@
           }
         return state;
       }
-    // protected:
+    protected:
       OnePin& pin;
       BtnState getState() {return pin.in()?Held:Open; }
       BtnState state=Open;
