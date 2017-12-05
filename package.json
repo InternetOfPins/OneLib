@@ -1,13 +1,8 @@
 {
   "dependencies": {
-    "got": "^6.7.1",
-    "registry-auth-token": "^3.0.1",
-    "registry-url": "^3.0.3",
-    "semver": "^5.1.0"
+    "OnePin": "^0.0.1",
   },
   "devDependencies": {
-    "ava": "*",
-    "mock-private-registry": "^1.1.0",
-    "xo": "*"
+    "streamFlow": "*"
   }
 }
