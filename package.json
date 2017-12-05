@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "OnePin": "InternetOfPins/OnePin/master",
+    "OnePin": "InternetOfPins/OnePin"
   },
   "devDependencies": {
-    "streamFlow": "neu-rah/streamFlow/master"
+    "streamFlow": "neu-rah/streamFlow"
   }
 }
