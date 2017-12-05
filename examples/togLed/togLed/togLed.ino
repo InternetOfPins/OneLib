@@ -5,15 +5,19 @@ using namespace OneLib;
 using namespace OneLib::Arduino;
 #include <OneLib/ClickButton.h>
 
-void rise() {Serial.println("rise");}
-void fall() {Serial.println("fall");}
+void rise() {Serial.println("button pressed");}
+void fall() {Serial.println("button released");}
+
+void ledOn() {Serial.println("led id on");}
+void ledOff() {Serial.println("led id off");}
 
 //default led
-typedef OutputPin<LED_BUILTIN> Led;
+typedef PinCap<OnRise<OnFall<OutputPin<LED_BUILTIN>,ledOff>,ledOn>> Led;
 
 #define BUTTON_PIN 4
 //pulled-up input pin with 10ms software debounce
-typedef OnRise<OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise> Btn;
+//with rise/fall associated fuctions
+typedef PinCap<OnRise<OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise>> Btn;
 
 //button driver, emits Clicked events +
 ClickButton<> oneBtn(Hook<Btn>::pin());
@@ -26,7 +30,6 @@ void setup() {
   // Btn::begin();//static pin init
   oneBtn.begin();//dynamic pin init
   Led::begin();
-  // Btn::what();
 }
 
 //toggle led when button clicked
