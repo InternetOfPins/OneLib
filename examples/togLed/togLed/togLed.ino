@@ -11,7 +11,7 @@ void fall() {Serial.println("button released");}
 void ledOn() {Serial.println("led id on");}
 void ledOff() {Serial.println("led id off");}
 
-//default led
+//default led output with rise/fall associated functions
 typedef PinCap<OnRise<OnFall<OutputPin<LED_BUILTIN>,ledOff>,ledOn>> Led;
 
 #define BUTTON_PIN 4
