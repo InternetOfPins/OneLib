@@ -1,21 +1,35 @@
 # OneLib
 
-**Zero cost meta-framework for IOT**
+**Using Zero cost meta-framework for IOT**
 
 Zero-cost abstractions for pin frameworks
 
 ## Purpose
 
 Provide a set of common small libraries packed into one.
+
 Serve as an example of [OnePin](https://github.com/InternetOfPins/OnePin) library usage.
 
 ## Utilities
 
-- **Button** simple button state provider with states Open⁺ | Pressed | Hold⁺ | Released
-  ⁺ Open and Hold states can repeat
-  Pressed and Released states are unique and must be consumed
-- **ClickButton** Button variant with extra unique states DoubleClicked | Clicked 
+- **Button** simple button state provider with states:
+  + Open⁺
+  + Pressed
+  + Hold⁺
+  + Released
+
+
+  _⁺ Open and Hold states can repeat_
+
+  _Pressed and Released states are unique and must be consumed_
+
+- **ClickButton** Button variant with extra unique states:
+  + DoubleClicked
+  + Clicked
+
+
 - **Encoder** simple quad-encoder driver
+
 - **AccelEncoder** Encoder variant with acceleration
 
 ## Example
