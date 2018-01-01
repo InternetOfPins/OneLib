@@ -8,8 +8,8 @@ using namespace OneLib::Arduino;
 void rise() {Serial.println("button pressed");}
 void fall() {Serial.println("button released");}
 
-void ledOn() {Serial.println("led id on");}
-void ledOff() {Serial.println("led id off");}
+void ledOn() {Serial.println("led is on");}
+void ledOff() {Serial.println("led is off");}
 
 //default led output with rise/fall associated functions
 typedef OneLib::Arduino::PinCap<OneLib::Arduino::OnRise<OneLib::Arduino::OnFall<OutputPin<LED_BUILTIN>,ledOff>,ledOn>> Led;
@@ -34,5 +34,8 @@ void setup() {
 
 //toggle led when button clicked
 void loop() {
-  if(oneBtn.get()==BtnState::Clicked) Led::tog();
+  if(oneBtn.get()==BtnState::Clicked) {
+    Serial.println("Clicked, toggle led...");
+    Led::tog();
+  }
 }
