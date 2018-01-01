@@ -11,8 +11,27 @@ void fall() {Serial.println("button released");}
 void ledOn() {Serial.println("led is on");}
 void ledOff() {Serial.println("led is off");}
 
+void ledChanged();
+
 //default led output with rise/fall associated functions
-typedef OneLib::Arduino::PinCap<OneLib::Arduino::OnRise<OneLib::Arduino::OnFall<OutputPin<LED_BUILTIN>,ledOff>,ledOn>> Led;
+typedef
+  OneLib::Arduino::PinCap<
+    OneLib::Arduino::OnChange<
+      OneLib::Arduino::OnRise<
+        OneLib::Arduino::OnFall<
+          OutputPin<LED_BUILTIN>
+          ,ledOff
+        >
+        ,ledOn
+      >
+      ,ledChanged
+    >
+  > Led;
+
+void ledChanged() {
+  Serial.print("led changed, state:");
+  Serial.println(Led::rawIn());
+}
 
 #define BUTTON_PIN 4
 //pulled-up input pin with 10ms software debounce
