@@ -1,8 +1,8 @@
 #include <OneArduino.h>
+using namespace OneLib::Arduino;
+
 #include <OneLib/Button.h>
 
-// using namespace OneLib;
-using namespace OneLib::Arduino;
 #include <OneLib/ClickButton.h>
 
 void rise() {Serial.println("button pressed");}
@@ -39,7 +39,7 @@ void ledChanged() {
 typedef OneLib::Arduino::PinCap<OneLib::Arduino::OnRise<OneLib::Arduino::OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise>> Btn;
 
 //button driver, emits Clicked events +
-ClickButton<> oneBtn(Hook<Btn>::pin());
+ClickButton<OneLib::Arduino::API> oneBtn(Hook<Btn>::pin());
 
 void setup() {
   Serial.begin(115200);

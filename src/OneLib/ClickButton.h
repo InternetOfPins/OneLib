@@ -9,7 +9,7 @@ using namespace OneLib;
 
   // namespace OneLib {
 
-    template<unsigned long dblTime=600, unsigned long hldTime=2*dblTime>
+    template<typename API,unsigned long dblTime=600, unsigned long hldTime=2*dblTime>
     class ClickButton:public OneButton {
     public:
       ClickButton(OnePin& pin):OneButton(pin) {}
@@ -23,22 +23,22 @@ using namespace OneLib;
       }
       void update() {
         if (mustConsume(btnState)) return;//this states must be consumed!
-        long delta=getMillis()-lastCheck;
+        long delta=API::getMillis()-lastCheck;
         BtnState one=OneButton::get();
         if (clicks&&one==Open&&delta>=(dblTime>>1)) {
           btnState=Clicked;
           clicks=0;//new frame
-          lastCheck=getMillis();
+          lastCheck=API::getMillis();
         } else {
           switch(one) {
             case Pressed:
               if (clicks) {
                 btnState=DoubleClicked;
                 clicks=0;//new frame
-                lastCheck=getMillis();
+                lastCheck=API::getMillis();
               } else {
                 clicks++;
-                lastCheck=getMillis();
+                lastCheck=API::getMillis();
                 btnState=Pressed;
               }
               break;
@@ -48,7 +48,7 @@ using namespace OneLib;
             case Released:
               if (btnState==Held) {
                 clicks=0;//new frame
-                lastCheck=getMillis();
+                lastCheck=API::getMillis();
                 btnState=Released;
               } else btnState=Open;
               break;
