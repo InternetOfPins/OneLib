@@ -20,6 +20,16 @@ Making it implicit at platform level, makes 8 bit MCU's to read 16 bits SPI port
 
 So, the problem remains, how to pass this without making everyone a template, and without making it implicit and platform dependent...
 
+**solutions:**
+
+1 - Revert to a common value (bool), would not allow pin grouping, libs requiring atomic groups have to be on the other side (templates)... right now i do not want this.
+
+2 - Use a common base... will we make 8 bit MCU's use multi-bytes or the reverse... still not satisfactory.
+
+3 - explore the possibility of making the library specify its pin group size. <-- this looks promising.
+
+4 - what else? anyone?
+
 ## Purpose
 
 Provide a set of common small libraries packed into one.
