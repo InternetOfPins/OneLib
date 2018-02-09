@@ -28,6 +28,15 @@ So, the problem remains, how to pass this without making everyone a template, an
 
 3 - explore the possibility of making the library specify its pin group size. <-- this looks promising.
 
+```c++
+template<typename Unit,typename Type,Type data,uint8_t at, uint8_t sz=1,typename Value=Unit> struct Bits;
+
+...
+
+typedef Bits<uint8_t,uint8_t*,data,0,16,uint16_t> MyField;
+```
+from this its clear that framework/platform contributes with  `Unit` and `Type` and library with `Value`
+
 4 - what else? anyone?
 
 ## Purpose
