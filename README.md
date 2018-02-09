@@ -4,6 +4,22 @@
 
 Zero-cost abstractions for pin frameworks
 
+**This project is in early development and should only be used by contributing developers. Expect substantial changes to the library API as it evolves. Contributions, ideas and PRs are very welcome.**
+
+## Current state
+
+Right now I'm facing this problem:
+
+After all the trouble to make pin operations to be grouped in atomic groups of arbitrary size, i need **OneLib** to be a non-template. Otherwise all libraries would have to be made templates also.
+
+Previous implicit type was working but didn't allow mixing frameworks.
+
+Now **OnePin** is using explicit type for atomic operations.
+
+Making it implicit at platform level, makes 8 bit MCU's to read 16 bits SPI ports using two read operations (redundant).
+
+So, the problem remains, how to pass this without making everyone a template, and without making it implicit and platform dependent...
+
 ## Purpose
 
 Provide a set of common small libraries packed into one.

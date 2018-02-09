@@ -1,8 +1,10 @@
+// this code is broiken at this moment!
+
 #include <OneArduino.h>
 using namespace OneLib::Arduino;
 
-#include <OneLib/Button.h>
 
+#include <OneLib/Button.h>
 #include <OneLib/ClickButton.h>
 
 void rise() {Serial.println("button pressed");}
@@ -28,18 +30,18 @@ typedef
     >
   > Led;
 
-void ledChanged() {
-  Serial.print("led changed, state:");
-  Serial.println(Led::rawIn());
-}
+// void ledChanged() {
+//   Serial.print("led changed, state:");
+//   Serial.println(Led::rawIn());
+// }
 
 #define BUTTON_PIN 4
 //pulled-up input pin with 10ms software debounce
 //with rise/fall associated fuctions
-typedef OneLib::Arduino::PinCap<OneLib::Arduino::OnRise<OneLib::Arduino::OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise>> Btn;
+// typedef OneLib::Arduino::PinCap<OneLib::Arduino::OnRise<OneLib::Arduino::OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise>> Btn;
 
 //button driver, emits Clicked events +
-ClickButton<OneLib::Arduino::API> oneBtn(Hook<Btn>::pin());
+// ClickButton<OneLib::Arduino::API> oneBtn(Hook<Btn>::pin());
 
 void setup() {
   Serial.begin(115200);
@@ -47,14 +49,14 @@ void setup() {
   Serial.println("OneLib - togLed example");
   Serial.println("toggle led state on button press");
   // Btn::begin();//static pin init
-  oneBtn.begin();//dynamic pin init
-  Led::begin();
+  // oneBtn.begin();//dynamic pin init
+  // Led::begin();
 }
 
 //toggle led when button clicked
 void loop() {
-  if(oneBtn.get()==BtnState::Clicked) {
-    Serial.println("Clicked, toggle led...");
-    Led::tog();
-  }
+  // if(oneBtn.get()==BtnState::Clicked) {
+  //   Serial.println("Clicked, toggle led...");
+  //   Led::tog();
+  // }
 }
