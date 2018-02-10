@@ -4,6 +4,6 @@ A couple of small examples of libraries included, OneButton, OneEncoder, ClickBu
 */
 #ifndef ONELIB_DEF_H
   #define ONELIB_DEF_H
-  // #include <OnePin.h>
+  #include <OnePin.h>
   namespace OneLib {};
 #endif

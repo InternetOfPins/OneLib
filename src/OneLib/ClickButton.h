@@ -12,7 +12,8 @@ using namespace OneLib;
     template<typename API,unsigned long dblTime=600, unsigned long hldTime=2*dblTime>
     class ClickButton:public OneButton {
     public:
-      ClickButton(OnePin& pin):OneButton(pin) {}
+      using Pin=OnePin<uint8_t,1>;
+      ClickButton(Pin& pin):OneButton(pin) {}
       static inline bool mustConsume(BtnState btnState)//list states that MUST be consumed
       {return btnState==DoubleClicked||btnState==Clicked||btnState==Released;}
       BtnState get() {
