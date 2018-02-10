@@ -6,39 +6,6 @@ Zero-cost abstractions for pin frameworks
 
 **This project is in early development and should only be used by contributing developers. Expect substantial changes to the library API as it evolves. Contributions, ideas and PRs are very welcome.**
 
-## Current state
-
-Right now I'm facing this problem:
-
-After all the trouble to make pin operations to be grouped in atomic groups of arbitrary size, i need **OneLib** to be a non-template. Otherwise all libraries would have to be made templates also.
-
-Previous implicit type was working but didn't allow mixing frameworks.
-
-Now **OnePin** is using explicit type for atomic operations.
-
-Making it implicit at platform level, makes 8 bit MCU's to read 16 bits SPI ports using two read operations (redundant).
-
-So, the problem remains, how to pass this without making everyone a template, and without making it implicit and platform dependent...
-
-**solutions:**
-
-1 - Revert to a common value (bool), would not allow pin grouping, libs requiring atomic groups have to be on the other side (templates)... right now i do not want this.
-
-2 - Use a common base... will we make 8 bit MCU's use multi-bytes or the reverse... still not satisfactory.
-
-3 - explore the possibility of making the library specify its pin group size. <-- this looks promising.
-
-```c++
-template<typename Unit,typename Type,Type data,uint8_t at, uint8_t sz=1,typename Value=Unit> struct Bits;
-
-...
-
-typedef Bits<uint8_t,uint8_t*,data,0,16,uint16_t> MyField;
-```
-from this its clear that framework/platform contributes with  `Unit` and `Type` and library with `Value` (this is correct!), But with this direction of parameters implies that API info must be provided somewhere else, because its on the contrary direction.
-
-4 - what else? anyone?
-
 ## Purpose
 
 Provide a set of common small libraries packed into one.
