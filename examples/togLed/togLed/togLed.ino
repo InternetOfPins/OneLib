@@ -1,5 +1,3 @@
-// this code is broiken at this moment!
-
 #include <OneArduino.h>
 using namespace OneLib::Arduino;
 
@@ -35,9 +33,10 @@ void ledChanged() {
 }
 
 #define BUTTON_PIN 4
-//pulled-up input pin with 10ms software debounce
-//with rise/fall associated fuctions
-typedef PinCap<OnRise<OnFall<Debouncer<InputPin<-BUTTON_PIN>,10>,fall>,rise>> Btn;
+//pulled-up input pin with:
+//  10ms software debounce
+//  rise/fall associated fuctions
+typedef PinCap<OnFall<OnRise<Debouncer<InputPin<-BUTTON_PIN>,10>,rise>,fall>> Btn;
 
 //button driver, emits Clicked events +
 ClickButton<Arduino::API> oneBtn(Hook<Btn,API::Value>::pin());
@@ -57,5 +56,6 @@ void loop() {
   if(oneBtn.get()==BtnState::Clicked) {
     Serial.println("Clicked, toggle led...");
     Led::tog();
+    Serial.println();
   }
 }

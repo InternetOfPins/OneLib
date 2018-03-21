@@ -2,14 +2,18 @@
 // #ifndef ONELIB_ENCODER_DEF
    // #define ONELIB_ENCODER_DEF
 
-  #include "OneLib.h"
+  #include <OneLib.h>
+  #include <HAL/Func.h>
+
+  using namespace OneLib;
 
   // namespace OneLib {
-    template<int16_t accelUp=6> class Encoder;
+    template<typename API,int16_t accelUp=6> class Encoder;
 
-    template<>class Encoder<0> {
+    template<typename API>class Encoder<API,0> {
       public:
-        Encoder(OnePin& a,OnePin& b):a(a),b(b) {}
+        using Pin=OnePin<typename API::Value,1>;
+        Encoder(Pin& a,Pin& b):a(a),b(b) {}
         void begin() {
           a.begin();
           b.begin();
@@ -26,7 +30,7 @@
         }
 
         template<Encoder *enc>
-        using UpdateA = MFunc<Encoder>::With<enc,&Encoder::updateA>;
+        using UpdateA = MFunc< Encoder >::With<enc,&Encoder::updateA>;
         template<Encoder *enc,class O,uint8_t deb=1>
         using PinA=RecState<OnChange<O,UpdateA<enc>::caller>>;
 
@@ -36,8 +40,8 @@
         using PinB=RecState<OnChange<O,UpdateB<enc>::caller>>;
 
       protected:
-        OnePin& a;
-        OnePin& b;
+        Pin& a;
+        Pin& b;
         volatile int pos=0;
     };
 
